@@ -1,0 +1,42 @@
+﻿@model Appointment
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GurdianName" class="control-label">Valideynin Adı</label>
+                <input asp-for="GurdianName" class="form-control" />
+                <span asp-validation-for="GurdianName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GurdianEmail" class="control-label">Valideynin Email ünvanı</label>
+                <input asp-for="GurdianEmail" class="form-control" id="answer" />
+                <span asp-validation-for="GurdianEmail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChildName" class="control-label">Uşağın adı</label>
+                <input asp-for="ChildName" class="form-control" id="answer" />
+                <span asp-validation-for="ChildName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ChildAge" class="control-label">Uşağın yaşı</label>
+                <input asp-for="ChildAge" class="form-control" id="answer" />
+                <span asp-validation-for="ChildAge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Message" class="control-label">Mesaj</label>
+                <textarea asp-for="Message" class="form-control" id="answer"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="@DefaultConstantValue.ADD_MESSAGE" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">@DefaultConstantValue.RETURN_TO_BACK</a>
+</div>
