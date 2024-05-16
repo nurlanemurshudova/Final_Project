@@ -317,6 +317,33 @@ namespace DataAccess.Migrations
                     b.ToTable("SchoolClasses", (string)null);
                 });
 
+            modelBuilder.Entity("Entities.Concrete.TableModels.SchoolClassTeacher", b =>
+                {
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SchoolClassId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Deleted")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastUpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("TeacherId", "SchoolClassId");
+
+                    b.HasIndex("SchoolClassId");
+
+                    b.ToTable("SchoolClassTeachers");
+                });
+
             modelBuilder.Entity("Entities.Concrete.TableModels.Slide", b =>
                 {
                     b.Property<int>("Id")
@@ -401,6 +428,9 @@ namespace DataAccess.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -412,6 +442,8 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PositionId");
 
                     b.ToTable("Teachers", (string)null);
                 });
@@ -531,36 +563,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Testimonials", (string)null);
                 });
 
-            modelBuilder.Entity("PositionTeacher", b =>
-                {
-                    b.Property<int>("PositionsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeachersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PositionsId", "TeachersId");
-
-                    b.HasIndex("TeachersId");
-
-                    b.ToTable("TeacherPositions", (string)null);
-                });
-
-            modelBuilder.Entity("SchoolClassTeacher", b =>
-                {
-                    b.Property<int>("SchoolClassesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeachersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SchoolClassesId", "TeachersId");
-
-                    b.HasIndex("TeachersId");
-
-                    b.ToTable("SchoolClassTeachers", (string)null);
-                });
-
             modelBuilder.Entity("Entities.Concrete.TableModels.GurdianNumber", b =>
                 {
                     b.HasOne("Entities.Concrete.TableModels.Appointment", "Appointment")
@@ -572,39 +574,54 @@ namespace DataAccess.Migrations
                     b.Navigation("Appointment");
                 });
 
-            modelBuilder.Entity("PositionTeacher", b =>
+            modelBuilder.Entity("Entities.Concrete.TableModels.SchoolClassTeacher", b =>
                 {
-                    b.HasOne("Entities.Concrete.TableModels.Position", null)
-                        .WithMany()
-                        .HasForeignKey("PositionsId")
+                    b.HasOne("Entities.Concrete.TableModels.SchoolClass", "SchoolClass")
+                        .WithMany("SchoolClassTeachers")
+                        .HasForeignKey("SchoolClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Concrete.TableModels.Teacher", null)
-                        .WithMany()
-                        .HasForeignKey("TeachersId")
+                    b.HasOne("Entities.Concrete.TableModels.Teacher", "Teacher")
+                        .WithMany("SchoolClassTeachers")
+                        .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("SchoolClass");
+
+                    b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("SchoolClassTeacher", b =>
+            modelBuilder.Entity("Entities.Concrete.TableModels.Teacher", b =>
                 {
-                    b.HasOne("Entities.Concrete.TableModels.SchoolClass", null)
-                        .WithMany()
-                        .HasForeignKey("SchoolClassesId")
+                    b.HasOne("Entities.Concrete.TableModels.Position", "Position")
+                        .WithMany("Teachers")
+                        .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Concrete.TableModels.Teacher", null)
-                        .WithMany()
-                        .HasForeignKey("TeachersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Position");
                 });
 
             modelBuilder.Entity("Entities.Concrete.TableModels.Appointment", b =>
                 {
                     b.Navigation("GurdianNumbers");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.TableModels.Position", b =>
+                {
+                    b.Navigation("Teachers");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.TableModels.SchoolClass", b =>
+                {
+                    b.Navigation("SchoolClassTeachers");
+                });
+
+            modelBuilder.Entity("Entities.Concrete.TableModels.Teacher", b =>
+                {
+                    b.Navigation("SchoolClassTeachers");
                 });
 #pragma warning restore 612, 618
         }

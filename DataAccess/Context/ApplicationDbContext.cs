@@ -27,5 +27,6 @@ namespace DataAccess.Context
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<TeacherCandidate> TeacherCandidates { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
+        public DbSet<SchoolClassTeacher> SchoolClassTeachers { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using Business.BaseMessages;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
 using DataAccess.Concrete;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 
 namespace Business.Concrete
@@ -10,30 +11,21 @@ namespace Business.Concrete
     public class AboutManager : IAboutService
     {
         AboutDal aboutDal = new ();
-        public IResult Add(About entity)
+        public IResult Add(AboutCreateDto dto)
         {
-            aboutDal.Add(entity);
+            var model = AboutCreateDto.ToAbout(dto);
+            aboutDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
-        public IResult Update(About entity)
+        public IResult Update(AboutUpdateDto dto)
         {
-            entity.LastUpdateDate = DateTime.Now;
-            aboutDal.Update(entity);
+            var model = AboutUpdateDto.ToAbout(dto);
+            model.LastUpdateDate = DateTime.Now;
+            aboutDal.Update(model);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }
-
-        public IResult Delete(int id)
-        {
-            var data = GetById(id).Data;
-            data.Deleted = id;
-
-            aboutDal.Update(data);
-
-            return new SuccessResult(UIMessages.Deleted_MESSAGE);
-        }
-
         public IDataResult<List<About>> GetAll()
         {
             return new SuccessDataResult<List<About>>(aboutDal.GetAll(x => x.Deleted == 0));
@@ -43,7 +35,5 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<About>(aboutDal.GetById(id));
         }
-
-
     }
 }

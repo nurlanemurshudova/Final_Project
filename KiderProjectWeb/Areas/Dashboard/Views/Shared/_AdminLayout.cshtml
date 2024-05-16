@@ -20,7 +20,6 @@
     <link href="~/admin/css/sb-admin-2.min.css" rel="stylesheet">
 
     <link href="~/admin/vendor/datatables/datatables.bootstrap4.min.css" rel="stylesheet" />
-
 </head>
 
 <body id="page-top">
@@ -59,6 +58,18 @@
                 <a class="nav-link" asp-action="Index" asp-controller="Contact">
                     <i class="fa-regular fa-address-book"></i>
                     <span>Əlaqə</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" asp-action="Index" asp-controller="GurdianNumber">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>Valideyn nömrələri</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" asp-action="Index" asp-controller="About">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Haqqımızda</span>
                 </a>
             </li>
 
@@ -229,6 +240,20 @@
     <script src="~/admin/vendor/sweetalert2/sweetalert2.all.min.js"></script>
     <script src="~/admin/vendor/sweetalert2/sweetalert2.js"></script>
     <script src="~/admin/vendor/sweetalert2/sweetalert2.min.js"></script>
+
+
+    <script>
+        document.querySelectorAll('.partial-text').forEach(item => {
+            item.addEventListener('mouseover', function () {
+                this.querySelector('.hidden-text').style.display = 'inline';
+            });
+
+            item.addEventListener('mouseout', function () {
+                this.querySelector('.hidden-text').style.display = 'none';
+            });
+        });
+    </script>
+
 
     @RenderSection("Scripts", false)
 </body>

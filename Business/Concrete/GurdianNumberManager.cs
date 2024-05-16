@@ -3,6 +3,7 @@ using Business.BaseMessages;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
 using DataAccess.Concrete;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 
 namespace Business.Concrete
@@ -27,9 +28,9 @@ namespace Business.Concrete
             return new SuccessResult(UIMessages.Deleted_MESSAGE);
         }
 
-        public IDataResult<List<GurdianNumber>> GetNumberWithAppointments()
+        public IDataResult<List<GurdianNumberDto>> GetNumberWithAppointments()
         {
-            return new SuccessDataResult<List<GurdianNumber>>(numberDal.GetNumberWithAppointments());
+            return new SuccessDataResult<List<GurdianNumberDto>>(numberDal.GetNumberWithAppointments());
         }
 
         public IDataResult<GurdianNumber> GetById(int id)

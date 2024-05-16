@@ -1,20 +1,30 @@
 ﻿using Core.DataAccess.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Context;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete
 {
     public class GurdianNumberDal : BaseRepository<GurdianNumber, ApplicationDbContext>, IGurdianNumberDal
     {
-        ApplicationDbContext context = new();
-        public List<GurdianNumber> GetNumberWithAppointments()
+        ApplicationDbContext _context = new();
+        public List<GurdianNumberDto> GetNumberWithAppointments()
         {
-            var data = context.GurdianNumbers
-                .Where(x => x.Deleted == 0)
-                .Include(x => x.Appointment).ToList();
-            return data;
+            var result = from number in _context.GurdianNumbers
+                         where number.Deleted == 0
+                         join appointment in _context.Appointments
+                         on number.AppontmentId equals appointment.Id
+                         where appointment.Deleted == 0
+                         select new GurdianNumberDto
+                         {
+                             Id = number.Id,
+                             Number = number.Number,
+                             AppontmentId = appointment.Id,
+                             AppontmentName= appointment.GurdianName
+                         };
+
+            return result.ToList();
         }
     }
 }

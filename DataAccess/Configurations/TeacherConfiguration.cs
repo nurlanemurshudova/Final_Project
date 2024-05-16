@@ -43,13 +43,9 @@ namespace DataAccess.Configurations
                .HasDefaultValue(false)
               .IsRequired();
 
-            builder.HasMany(t => t.Positions)
-                   .WithMany(p => p.Teachers)
-                   .UsingEntity(j => j.ToTable("TeacherPositions"));
-
-            builder.HasMany(t => t.SchoolClasses)
-                   .WithMany(c => c.Teachers)
-                   .UsingEntity(j => j.ToTable("SchoolClassTeachers"));
+            //builder.HasMany(t => t.SchoolClasses)
+            //       .WithMany(c => c.Teachers)
+            //       .UsingEntity(j => j.ToTable("SchoolClassTeachers"));
         }
     }
 

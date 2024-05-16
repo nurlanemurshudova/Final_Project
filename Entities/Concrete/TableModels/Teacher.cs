@@ -9,11 +9,12 @@ namespace Entities.Concrete.TableModels
         public string InstagramUrl { get; set; }
         public string FacebookUrl { get; set; }
         public string TwitterUrl { get; set; }
-        public List<Position> Positions { get; set; }
+        public int PositionId { get; set; }
+        public Position Position { get; set; }
         public string PhotoUrl { get; set; }
         public bool IsHomePage { get; set; }
         public byte Experience { get; set; }
-        public List<SchoolClass> SchoolClasses { get; set;}
-
+        //public List<SchoolClass> SchoolClasses { get; } = [];
+        public List<SchoolClassTeacher> SchoolClassTeachers { get; } = [];
     }
 }

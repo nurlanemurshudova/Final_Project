@@ -165,29 +165,6 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Teachers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "10000, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Surname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    InstagramUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    FacebookUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    TwitterUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    PhotoUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    IsHomePage = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    Experience = table.Column<byte>(type: "tinyint", nullable: false),
-                    Deleted = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastUpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teachers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Testimonials",
                 columns: table => new
                 {
@@ -230,48 +207,58 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SchoolClassTeachers",
+                name: "Teachers",
                 columns: table => new
                 {
-                    SchoolClassesId = table.Column<int>(type: "int", nullable: false),
-                    TeachersId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "10000, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Surname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    InstagramUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    FacebookUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    TwitterUrl = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    PositionId = table.Column<int>(type: "int", nullable: false),
+                    PhotoUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    IsHomePage = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Experience = table.Column<byte>(type: "tinyint", nullable: false),
+                    Deleted = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SchoolClassTeachers", x => new { x.SchoolClassesId, x.TeachersId });
+                    table.PrimaryKey("PK_Teachers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SchoolClassTeachers_SchoolClasses_SchoolClassesId",
-                        column: x => x.SchoolClassesId,
-                        principalTable: "SchoolClasses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SchoolClassTeachers_Teachers_TeachersId",
-                        column: x => x.TeachersId,
-                        principalTable: "Teachers",
+                        name: "FK_Teachers_Positions_PositionId",
+                        column: x => x.PositionId,
+                        principalTable: "Positions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TeacherPositions",
+                name: "SchoolClassTeachers",
                 columns: table => new
                 {
-                    PositionsId = table.Column<int>(type: "int", nullable: false),
-                    TeachersId = table.Column<int>(type: "int", nullable: false)
+                    TeacherId = table.Column<int>(type: "int", nullable: false),
+                    SchoolClassId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Deleted = table.Column<int>(type: "int", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastUpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TeacherPositions", x => new { x.PositionsId, x.TeachersId });
+                    table.PrimaryKey("PK_SchoolClassTeachers", x => new { x.TeacherId, x.SchoolClassId });
                     table.ForeignKey(
-                        name: "FK_TeacherPositions_Positions_PositionsId",
-                        column: x => x.PositionsId,
-                        principalTable: "Positions",
+                        name: "FK_SchoolClassTeachers_SchoolClasses_SchoolClassId",
+                        column: x => x.SchoolClassId,
+                        principalTable: "SchoolClasses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TeacherPositions_Teachers_TeachersId",
-                        column: x => x.TeachersId,
+                        name: "FK_SchoolClassTeachers_Teachers_TeacherId",
+                        column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -341,9 +328,9 @@ namespace DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolClassTeachers_TeachersId",
+                name: "IX_SchoolClassTeachers_SchoolClassId",
                 table: "SchoolClassTeachers",
-                column: "TeachersId");
+                column: "SchoolClassId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Slides_Title",
@@ -362,9 +349,9 @@ namespace DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TeacherPositions_TeachersId",
-                table: "TeacherPositions",
-                column: "TeachersId");
+                name: "IX_Teachers_PositionId",
+                table: "Teachers",
+                column: "PositionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Testimonials_FirstName",
@@ -397,9 +384,6 @@ namespace DataAccess.Migrations
                 name: "TeacherCandidates");
 
             migrationBuilder.DropTable(
-                name: "TeacherPositions");
-
-            migrationBuilder.DropTable(
                 name: "Testimonials");
 
             migrationBuilder.DropTable(
@@ -409,10 +393,10 @@ namespace DataAccess.Migrations
                 name: "SchoolClasses");
 
             migrationBuilder.DropTable(
-                name: "Positions");
+                name: "Teachers");
 
             migrationBuilder.DropTable(
-                name: "Teachers");
+                name: "Positions");
         }
     }
 }

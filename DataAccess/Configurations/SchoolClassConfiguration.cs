@@ -44,9 +44,9 @@ namespace DataAccess.Configurations
                 .HasMaxLength(250);
 
             // İlişkilendirme tanımı (Öğretmenler)
-            builder.HasMany(c => c.Teachers)
-                   .WithMany(t => t.SchoolClasses)
-                   .UsingEntity(j => j.ToTable("SchoolClassTeachers"));
+            //builder.HasMany(c => c.Teachers)
+            //       .WithMany(t => t.SchoolClasses)
+            //       .UsingEntity(j => j.ToTable("SchoolClassTeachers"));
 
         }
     }
