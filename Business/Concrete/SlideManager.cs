@@ -1,11 +1,13 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -16,9 +18,10 @@ namespace Business.Concrete
         {
             _slideDal = slideDal;
         }
-        public IResult Add(SlideCreateDto entity)
+        public IResult Add(SlideCreateDto entity, IFormFile photoUrl, string webRootPath)
         {
             var model = SlideCreateDto.ToSlide(entity);
+            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
             _slideDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
@@ -46,9 +49,18 @@ namespace Business.Concrete
 
         }
 
-        public IResult Update(SlideUpdateDto entity)
+        public IResult Update(SlideUpdateDto entity, IFormFile photoUrl, string webRootPath)
         {
             var model = SlideUpdateDto.ToSlide(entity);
+            var existData = GetById(entity.Id).Data;
+            if (photoUrl == null)
+            {
+                model.PhotoUrl = existData.PhotoUrl;
+            }
+            else
+            {
+                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            }
 
             model.LastUpdateDate = DateTime.Now;
             _slideDal.Update(model);

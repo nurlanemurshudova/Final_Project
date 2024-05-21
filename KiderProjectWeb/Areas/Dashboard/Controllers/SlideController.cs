@@ -9,9 +9,11 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
     public class SlideController : Controller
     {
         private readonly ISlideService _slideService;
-        public SlideController(ISlideService slideService)
+        private readonly IWebHostEnvironment _env;
+        public SlideController(ISlideService slideService, IWebHostEnvironment env)
         {
             _slideService = slideService;
+            _env = env;
         }
 
         public IActionResult Index()
@@ -27,9 +29,9 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(SlideCreateDto slide)
+        public IActionResult Create(SlideCreateDto slide, IFormFile photoUrl)
         {
-            var result = _slideService.Add(slide);
+            var result = _slideService.Add(slide,photoUrl,_env.WebRootPath);
             if (result.IsSuccess)
                 return RedirectToAction("Index");
 
@@ -45,9 +47,9 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(SlideUpdateDto slide)
+        public IActionResult Edit(SlideUpdateDto slide, IFormFile photoUrl)
         {
-            var result = _slideService.Update(slide);
+            var result = _slideService.Update(slide, photoUrl, _env.WebRootPath);
 
             if (result.IsSuccess) return RedirectToAction("Index");
 

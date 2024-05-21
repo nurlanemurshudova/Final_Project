@@ -9,6 +9,7 @@ namespace Entities.Concrete.ViewModels
 {
     public class TeacherVM
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string InstagramUrl { get; set; }

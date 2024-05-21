@@ -31,7 +31,7 @@
                                 <td>@item.Time</td>
                                 <td>@item.Capacity</td>
                                 <td>@item.Price</td>
-                                <td>@item.PhotoUrl</td>
+                                <td><img src="@item.PhotoUrl" style="width:100px; height:100px" alt="Class Image" /></td>
                                 <td>@(item.IsHomePage ? "Bəli" : "Xeyr")</td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id">

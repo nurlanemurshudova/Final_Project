@@ -26,7 +26,6 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         public IActionResult Create()
         {
             ViewData["Positions"] = _positionService.GetAll().Data;
-
             return View();
         }
 

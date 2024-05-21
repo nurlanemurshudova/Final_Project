@@ -27,7 +27,7 @@
                                     <span class="visible-text">@Html.Raw(item.Description.Substring(0, 50) + "...")</span>
                                     <span class="hidden-text" style="display: none;">@Html.Raw(item.Description)</span>
                                 </td>
-                                <td>@item.PhotoUrl</td>
+                                <td><img src="@item.PhotoUrl" style="width:100px; height:100px" alt="Slide Image" /></td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id">
                                         <i class="fa-solid fa-pen-to-square"></i>

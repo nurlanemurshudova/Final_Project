@@ -19,22 +19,30 @@ namespace DataAccess.Concrete
 
         public List<TeacherVM> GetAllClassTeacherWithClass()
         {
-            return (from t in _context.Teachers
-                    join p in _context.Positions on t.PositionId equals p.Id
-                    where t.Deleted == 0 && p.Deleted == 0
-                    select new TeacherVM
-                    {
-                        Name = t.Name,
-                        Surname = t.Surname,
-                        InstagramUrl = t.InstagramUrl,
-                        FacebookUrl = t.FacebookUrl,
-                        TwitterUrl = t.TwitterUrl,
-                        PositionId = t.PositionId,
-                        PositionName = p.Name,
-                        PhotoUrl = t.PhotoUrl,
-                        IsHomePage = t.IsHomePage,
-                        Experience = t.Experience
-                    }).ToList();
+            var teacherList = (from t in _context.Teachers
+                            join p in _context.Positions on t.PositionId equals p.Id
+                            where t.Deleted == 0 && p.Deleted == 0
+                            select new TeacherVM
+                            {
+                                Id = t.Id,
+                                Name = t.Name,
+                                Surname = t.Surname,
+                                InstagramUrl = t.InstagramUrl,
+                                FacebookUrl = t.FacebookUrl,
+                                TwitterUrl = t.TwitterUrl,
+                                PositionId = t.PositionId,
+                                PositionName = p.Name,
+                                PhotoUrl = t.PhotoUrl,
+                                IsHomePage = t.IsHomePage,
+                                Experience = t.Experience
+                            }).ToList();
+            if (teacherList == null && teacherList.Count > 0)
+                return teacherList;
+            foreach (var teacher in teacherList)
+            {
+                teacher.SchoolClassTeachers = GetSchoolClassTeachersDetails(teacher, teacher.Id);
+            }
+            return teacherList;
         }
 
         public TeacherVM GetByIdClassTeacherWithClass(int id)
@@ -44,6 +52,7 @@ namespace DataAccess.Concrete
                            where t.Id == id && t.Deleted == 0 && p.Deleted == 0
                            select new TeacherVM
                            {
+                               Id = t.Id,
                                Name = t.Name,
                                Surname = t.Surname,
                                InstagramUrl = t.InstagramUrl,

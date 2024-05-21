@@ -1,11 +1,13 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -17,10 +19,11 @@ namespace Business.Concrete
             _classDal = classDal;
         }
 
-        public IResult Add(SchoolClassCreateDto entity)
+        public IResult Add(SchoolClassCreateDto entity, IFormFile photoUrl, string webRootPath)
         {
             //classDal.Add(entity);
             var model = SchoolClassCreateDto.ToSchoolClass(entity);
+            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
             _classDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
@@ -48,9 +51,18 @@ namespace Business.Concrete
 
         }
 
-        public IResult Update(SchoolClassUpdateDto entity)
+        public IResult Update(SchoolClassUpdateDto entity, IFormFile photoUrl, string webRootPath)
         {
             var model = SchoolClassUpdateDto.ToSchoolClass(entity);
+            var existData = GetById(entity.Id).Data;
+            if (photoUrl == null)
+            {
+                model.PhotoUrl = existData.PhotoUrl;
+            }
+            else
+            {
+                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            }
             model.LastUpdateDate = DateTime.Now;
             _classDal.Update(model);
 
