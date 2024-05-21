@@ -8,7 +8,12 @@ namespace DataAccess.Concrete
 {
     public class GurdianNumberDal : BaseRepository<GurdianNumber, ApplicationDbContext>, IGurdianNumberDal
     {
-        ApplicationDbContext _context = new();
+        private readonly ApplicationDbContext _context;
+
+        public GurdianNumberDal(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         public List<GurdianNumberDto> GetNumberWithAppointments()
         {
             var result = from number in _context.GurdianNumbers

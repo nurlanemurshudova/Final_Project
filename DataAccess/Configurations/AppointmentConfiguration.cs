@@ -33,11 +33,8 @@ namespace DataAccess.Configurations
                 .HasMaxLength(2000)
                 .IsRequired();
 
-            builder.HasIndex(x => x.GurdianEmail)
-                .IsUnique();
+            builder.HasIndex(x => x.GurdianEmail);
 
-            builder.HasIndex(x => new { x.GurdianEmail, x.Deleted })
-                .IsUnique();
         }
     }
 }

@@ -15,6 +15,6 @@ namespace Entities.Concrete.TableModels
         public bool IsHomePage { get; set; }
         public byte Experience { get; set; }
         //public List<SchoolClass> SchoolClasses { get; } = [];
-        public List<SchoolClassTeacher> SchoolClassTeachers { get; } = [];
+        public List<SchoolClassTeacher> SchoolClassTeachers { get; set; }
     }
 }

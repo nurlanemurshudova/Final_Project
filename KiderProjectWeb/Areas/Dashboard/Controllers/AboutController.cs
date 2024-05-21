@@ -1,6 +1,5 @@
-﻿using Business.Concrete;
+﻿using Business.Abstract;
 using Entities.Concrete.Dtos;
-using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
@@ -8,11 +7,15 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
     [Area("Dashboard")]
     public class AboutController : Controller
     {
-        AboutManager _aboutManager = new();
+        private readonly IAboutService _aboutService;
+        public AboutController(IAboutService aboutService)
+        {
+            _aboutService = aboutService;
+        }
 
         public IActionResult Index()
         {
-            var data = _aboutManager.GetAll().Data;
+            var data = _aboutService.GetAll().Data;
 
             ViewBag.ShowButton = data.Count() == 0;
 
@@ -28,16 +31,20 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(AboutCreateDto dto)
         {
-            var result = _aboutManager.Add(dto);
-            if (result.IsSuccess) return RedirectToAction("Index");
+            var result = _aboutService.Add(dto);
+            if (!result.IsSuccess)
+            {
+                ModelState.AddModelError("Description", result.Message);
+                return View();
+            }
 
-            return View(dto);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var data = _aboutManager.GetById(id).Data;
+            var data = _aboutService.GetById(id).Data;
 
             return View(data);
         }
@@ -45,7 +52,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(AboutUpdateDto dto)
         {
-            var result = _aboutManager.Update(dto);
+            var result = _aboutService.Update(dto);
 
             if (result.IsSuccess) return RedirectToAction("Index");
 

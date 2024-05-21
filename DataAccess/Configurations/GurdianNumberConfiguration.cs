@@ -20,11 +20,7 @@ namespace DataAccess.Configurations
 
             builder.HasKey(x => x.Id);
 
-            builder.HasIndex(x => x.Number)
-                .IsUnique();
-
-            builder.HasIndex(x => new { x.Number, x.Deleted })
-                .IsUnique();
+            builder.HasIndex(x => x.Number);
 
             builder.HasOne(x => x.Appointment)
                 .WithMany(x => x.GurdianNumbers)

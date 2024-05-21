@@ -6,8 +6,8 @@ namespace Business.Abstract
 {
     public interface IGurdianNumberService
     {
-        IResult Add(GurdianNumber entity);
-        IResult Update(GurdianNumber entity);
+        IResult Add(GurdianNumberCreateDto entity);
+        IResult Update(GurdianNumberUpdateDto entity);
         IResult Delete(int id);
         IDataResult<List<GurdianNumberDto>> GetNumberWithAppointments();
         IDataResult<GurdianNumber> GetById(int id);

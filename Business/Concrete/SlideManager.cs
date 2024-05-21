@@ -2,17 +2,24 @@
 using Business.BaseMessages;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
+using DataAccess.Abstract;
 using DataAccess.Concrete;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 
 namespace Business.Concrete
 {
     public class SlideManager : ISlideService
     {
-        SlideDal slideDal = new();
-        public IResult Add(Slide entity)
+        private readonly ISlideDal _slideDal;
+        public SlideManager(ISlideDal slideDal)
         {
-            slideDal.Add(entity);
+            _slideDal = slideDal;
+        }
+        public IResult Add(SlideCreateDto entity)
+        {
+            var model = SlideCreateDto.ToSlide(entity);
+            _slideDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
@@ -22,27 +29,29 @@ namespace Business.Concrete
             var data = GetById(id).Data;
             data.Deleted = id;
 
-            slideDal.Update(data);
+            _slideDal.Update(data);
 
             return new SuccessResult(UIMessages.Deleted_MESSAGE);
         }
 
         public IDataResult<List<Slide>> GetAll()
         {
-            return new SuccessDataResult<List<Slide>>(slideDal.GetAll(x => x.Deleted == 0));
+            return new SuccessDataResult<List<Slide>>(_slideDal.GetAll(x => x.Deleted == 0));
 
         }
 
         public IDataResult<Slide> GetById(int id)
         {
-            return new SuccessDataResult<Slide>(slideDal.GetById(id));
+            return new SuccessDataResult<Slide>(_slideDal.GetById(id));
 
         }
 
-        public IResult Update(Slide entity)
+        public IResult Update(SlideUpdateDto entity)
         {
-            entity.LastUpdateDate = DateTime.Now;
-            slideDal.Update(entity);
+            var model = SlideUpdateDto.ToSlide(entity);
+
+            model.LastUpdateDate = DateTime.Now;
+            _slideDal.Update(model);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }

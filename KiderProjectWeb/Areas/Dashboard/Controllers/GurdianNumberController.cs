@@ -1,4 +1,6 @@
-﻿using Business.Concrete;
+﻿using Business.Abstract;
+using Business.Concrete;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,11 +9,17 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
     [Area("Dashboard")]
     public class GurdianNumberController : Controller
     {
-        GurdianNumberManager _gurdianNumberManager = new();
-        AppointmentManager appointmentManager = new();
+        private readonly IGurdianNumberService _gurdianNumberService;
+        private readonly IAppointmentService _appointmentService;
+        public GurdianNumberController(IGurdianNumberService gurdianNumberService, IAppointmentService appointmentService)
+        {
+            _gurdianNumberService = gurdianNumberService;
+            _appointmentService = appointmentService;
+        }
+
         public IActionResult Index()
         {
-            var data = _gurdianNumberManager.GetNumberWithAppointments().Data;
+            var data = _gurdianNumberService.GetNumberWithAppointments().Data;
 
             return View(data);
         }
@@ -19,37 +27,41 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewData["Appointments"] = appointmentManager.GetAll().Data;
+            ViewData["Appointments"] = _appointmentService.GetAll().Data;
 
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(GurdianNumber gurdianNumber)
+        public IActionResult Create(GurdianNumberCreateDto gurdianNumber)
         {
-            var result = _gurdianNumberManager.Add(gurdianNumber);
+            var result = _gurdianNumberService.Add(gurdianNumber);
 
-            if (result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                return RedirectToAction("Index");
+                ViewData["Appointments"] = _appointmentService.GetAll().Data;
+                ModelState.AddModelError("", result.Message);
+                return View(gurdianNumber);
             }
-            return View(gurdianNumber);
+
+            return RedirectToAction("Index");
+
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            ViewData["FoodCategories"] = appointmentManager.GetAll().Data;
+            ViewData["Appointments"] = _appointmentService.GetAll().Data;
 
-            var data = _gurdianNumberManager.GetById(id).Data;
+            var data = _gurdianNumberService.GetById(id).Data;
 
             return View(data);
         }
 
         [HttpPost]
-        public IActionResult Edit(GurdianNumber gurdianNumber)
+        public IActionResult Edit(GurdianNumberUpdateDto gurdianNumber)
         {
-            var result = _gurdianNumberManager.Update(gurdianNumber);
+            var result = _gurdianNumberService.Update(gurdianNumber);
 
 
             if (result.IsSuccess)
@@ -62,7 +74,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            var result = _gurdianNumberManager.Delete(id);
+            var result = _gurdianNumberService.Delete(id);
             if (result.IsSuccess)
             {
                 return RedirectToAction("Index");

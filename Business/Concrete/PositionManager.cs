@@ -2,17 +2,23 @@
 using Business.BaseMessages;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
-using DataAccess.Concrete;
+using DataAccess.Abstract;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 
 namespace Business.Concrete
 {
     public class PositionManager : IPositionService
     {
-        PositionDal positionDal = new();
-        public IResult Add(Position entity)
+        private readonly IPositionDal _positionDal;
+        public PositionManager(IPositionDal positionDal)
         {
-            positionDal.Add(entity);
+            _positionDal = positionDal;
+        }
+        public IResult Add(PositionCreateDto entity)
+        {
+            var model = PositionCreateDto.ToPosition(entity);
+            _positionDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
@@ -22,27 +28,28 @@ namespace Business.Concrete
             var data = GetById(id).Data;
             data.Deleted = id;
 
-            positionDal.Update(data);
+            _positionDal.Update(data);
 
             return new SuccessResult(UIMessages.Deleted_MESSAGE);
         }
 
         public IDataResult<List<Position>> GetAll()
         {
-            return new SuccessDataResult<List<Position>>(positionDal.GetAll(x => x.Deleted == 0));
+            return new SuccessDataResult<List<Position>>(_positionDal.GetAll(x => x.Deleted == 0));
 
         }
 
         public IDataResult<Position> GetById(int id)
         {
-            return new SuccessDataResult<Position>(positionDal.GetById(id));
+            return new SuccessDataResult<Position>(_positionDal.GetById(id));
 
         }
 
-        public IResult Update(Position entity)
+        public IResult Update(PositionUpdateDto entity)
         {
-            entity.LastUpdateDate = DateTime.Now;
-            positionDal.Update(entity);
+            var model = PositionUpdateDto.ToPosition(entity);
+            model.LastUpdateDate = DateTime.Now;
+            _positionDal.Update(model);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }

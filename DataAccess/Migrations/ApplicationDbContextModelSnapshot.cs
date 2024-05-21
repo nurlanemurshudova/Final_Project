@@ -91,11 +91,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GurdianEmail")
-                        .IsUnique();
-
-                    b.HasIndex("GurdianEmail", "Deleted")
-                        .IsUnique();
+                    b.HasIndex("GurdianEmail");
 
                     b.ToTable("Appointments", (string)null);
                 });
@@ -220,11 +216,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("AppontmentId");
 
-                    b.HasIndex("Number")
-                        .IsUnique();
-
-                    b.HasIndex("Number", "Deleted")
-                        .IsUnique();
+                    b.HasIndex("Number");
 
                     b.ToTable("GurdianNumbers", (string)null);
                 });

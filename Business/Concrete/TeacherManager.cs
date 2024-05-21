@@ -4,16 +4,23 @@ using Core.Results.Abstract;
 using Core.Results.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using Entities.Concrete.ViewModels;
 
 namespace Business.Concrete
 {
     public class TeacherManager : ITeacherService
     {
-        TeacherDal teacherDal = new();
-        public IResult Add(Teacher entity)
+        private readonly ITeacherDal _teacherDal;
+        public TeacherManager(ITeacherDal teacherDal) 
         {
-            teacherDal.Add(entity);
+            _teacherDal = teacherDal;
+        }
+        public IResult Add(TeacherCreateDto entity)
+        {
+            var model = TeacherCreateDto.ToTeacher(entity);
+            _teacherDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
@@ -23,27 +30,38 @@ namespace Business.Concrete
             var data = GetById(id).Data;
             data.Deleted = id;
 
-            teacherDal.Update(data);
+            _teacherDal.Update(data);
 
             return new SuccessResult(UIMessages.Deleted_MESSAGE);
         }
 
-        public IDataResult<List<Teacher>> GetAll()
+        public IDataResult<List<TeacherDto>> GetTeacherWithPositions()
         {
-            return new SuccessDataResult<List<Teacher>>(teacherDal.GetAll(x => x.Deleted == 0));
+            return new SuccessDataResult<List<TeacherDto>>(_teacherDal.GetTeacherWithPositions());
         }
 
         public IDataResult<Teacher> GetById(int id)
         {
-            return new SuccessDataResult<Teacher>(teacherDal.GetById(id));
+            return new SuccessDataResult<Teacher>(_teacherDal.GetById(id));
         }
 
-        public IResult Update(Teacher entity)
+        public IResult Update(TeacherUpdateDto entity)
         {
-            entity.LastUpdateDate = DateTime.Now;
-            teacherDal.Update(entity);
+            var model = TeacherUpdateDto.ToTeacher(entity);
+            model.LastUpdateDate = DateTime.Now;
+            _teacherDal.Update(model);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
+        }
+
+        public IDataResult<List<TeacherVM>> GetAllTeacherWithDetails()
+        {
+            return new SuccessDataResult<List<TeacherVM>>(_teacherDal.GetAllClassTeacherWithClass());
+        }
+
+        public IDataResult<TeacherVM> GetByIdTeacherWithDetails(int id)
+        {
+            return new SuccessDataResult<TeacherVM>(_teacherDal.GetByIdClassTeacherWithClass(id));
         }
     }
 }

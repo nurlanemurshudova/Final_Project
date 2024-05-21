@@ -6,7 +6,7 @@ namespace Entities.Concrete.TableModels
     {
         public int TeacherId { get; set; }
         public int SchoolClassId { get; set; }
-        public Teacher Teacher { get; set; } = null!;
-        public SchoolClass SchoolClass { get; set; } = null!;
+        public Teacher Teacher { get; set; }
+        public SchoolClass SchoolClass { get; set; }
     }
 }

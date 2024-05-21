@@ -2,17 +2,38 @@
 using Business.BaseMessages;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
-using DataAccess.Concrete;
+using DataAccess.Abstract;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using FluentValidation;
 
 namespace Business.Concrete
 {
     public class FacilityManager : IFacilityService
     {
-        FacilityDal facilityDal = new ();
-        public IResult Add(Facility entity)
+        private readonly IFacilityDal _facilityDal;
+        private readonly IValidator<Facility> _validator;
+        public FacilityManager(IFacilityDal facilityDal,IValidator<Facility> validator) 
         {
-            facilityDal.Add(entity);
+            _facilityDal = facilityDal;
+            _validator = validator;
+        }
+        public IResult Add(FacilityCreateDto entity)
+        {
+            var model = FacilityCreateDto.ToFacility(entity);
+            var validator = _validator.Validate(model);
+
+            string errorMessage = " ";
+            foreach (var item in validator.Errors)
+            {
+                errorMessage = item.ErrorMessage;
+            }
+
+            if (!validator.IsValid)
+            {
+                return new ErrorResult(errorMessage);
+            }
+            _facilityDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
 
@@ -23,7 +44,7 @@ namespace Business.Concrete
             var data = GetById(id).Data;
             data.Deleted = id;
 
-            facilityDal.Update(data);
+            _facilityDal.Update(data);
 
             return new SuccessResult(UIMessages.Deleted_MESSAGE);
 
@@ -31,18 +52,19 @@ namespace Business.Concrete
 
         public IDataResult<List<Facility>> GetAll()
         {
-            return new SuccessDataResult<List<Facility>>(facilityDal.GetAll(x => x.Deleted == 0));
+            return new SuccessDataResult<List<Facility>>(_facilityDal.GetAll(x => x.Deleted == 0));
         }
 
         public IDataResult<Facility> GetById(int id)
         {
-            return new SuccessDataResult<Facility>(facilityDal.GetById(id));
+            return new SuccessDataResult<Facility>(_facilityDal.GetById(id));
         }
 
-        public IResult Update(Facility entity)
+        public IResult Update(FacilityUpdateDto entity)
         {
-            entity.LastUpdateDate = DateTime.Now;
-            facilityDal.Update(entity);
+            var model = FacilityUpdateDto.ToFacility(entity);
+            model.LastUpdateDate = DateTime.Now;
+            _facilityDal.Update(model);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
 

@@ -11,7 +11,6 @@ namespace Entities.Concrete.Dtos
         public byte Capacity { get; set; }
         public decimal Price { get; set; }
         public string PhotoUrl { get; set; }
-        public string[] TeacherNames { get; set; }
         public static SchoolClass ToSchoolClass(SchoolClassCreateDto dto)
         {
             SchoolClass schoolClass = new SchoolClass()
@@ -25,13 +24,6 @@ namespace Entities.Concrete.Dtos
                 PhotoUrl = dto.PhotoUrl,
                 
             };
-            foreach (var teacherName in dto.TeacherNames)
-            {
-                Teacher teacher = new Teacher() 
-                {
-                    Name = teacherName 
-                };
-            }
             return schoolClass;
         }
     }

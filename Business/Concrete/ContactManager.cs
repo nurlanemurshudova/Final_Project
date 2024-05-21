@@ -4,16 +4,37 @@ using Core.Results.Abstract;
 using Core.Results.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using FluentValidation;
 
 namespace Business.Concrete
 {
     public class ContactManager : IContactService
     {
-        ContactDal contactDal = new();
-        public IResult Add(Contact entity)
+        private readonly IContactDal _contactDal;
+        private readonly IValidator<Contact> _validator;
+        public ContactManager(IContactDal contactDal,IValidator<Contact> validator) 
         {
-            contactDal.Add(entity);
+            _validator = validator;
+            _contactDal = contactDal;
+        }
+        public IResult Add(ContactCreateDto entity)
+        {
+            var model = ContactCreateDto.ToContact(entity);
+            var validator = _validator.Validate(model);
+
+            string errorMessage = " ";
+            foreach (var item in validator.Errors)
+            {
+                errorMessage = item.ErrorMessage;
+            }
+
+            if (!validator.IsValid)
+            {
+                return new ErrorResult(errorMessage);
+            }
+            _contactDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
@@ -23,25 +44,26 @@ namespace Business.Concrete
             var data = GetById(id).Data;
             data.Deleted = id;
 
-            contactDal.Update(data);
+            _contactDal.Update(data);
 
             return new SuccessResult(UIMessages.Deleted_MESSAGE);
         }
 
         public IDataResult<List<Contact>> GetAll()
         {
-            return new SuccessDataResult<List<Contact>>(contactDal.GetAll(x => x.Deleted == 0));
+            return new SuccessDataResult<List<Contact>>(_contactDal.GetAll(x => x.Deleted == 0));
         }
 
         public IDataResult<Contact> GetById(int id)
         {
-            return new SuccessDataResult<Contact>(contactDal.GetById(id));
+            return new SuccessDataResult<Contact>(_contactDal.GetById(id));
         }
 
-        public IResult Update(Contact entity)
+        public IResult Update(ContactUpdateDto entity)
         {
-            entity.LastUpdateDate = DateTime.Now;
-            contactDal.Update(entity);
+            var model = ContactUpdateDto.ToContact(entity);
+            model.LastUpdateDate = DateTime.Now;
+            _contactDal.Update(model);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }
