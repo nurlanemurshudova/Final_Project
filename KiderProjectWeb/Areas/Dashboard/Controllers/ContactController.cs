@@ -1,13 +1,11 @@
 ﻿using Business.Abstract;
-using Business.Concrete;
 using Entities.Concrete.Dtos;
-using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    public class ContactController : Controller
+    public class ContactController : BaseController
     {
         private readonly IContactService _contactService;
         public ContactController(IContactService contactService)
@@ -30,17 +28,15 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(ContactCreateDto contact)
         {
-            var result = _contactService.Add(contact);
+            var result = _contactService.Add(contact, out Dictionary<string, string> properties);
             if (!result.IsSuccess)
             {
-                ModelState.Clear();
-                ModelState.AddModelError("", result.Message);
+                AddModelError(properties);
                 return View(contact);
             }
             return RedirectToAction("Index");
 
         }
-
         [HttpGet]
         public IActionResult Edit(int id)
         {

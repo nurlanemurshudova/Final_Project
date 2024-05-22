@@ -18,10 +18,10 @@ namespace Business.Concrete
         {
             _testmonialDal = testmonialDal;
         }
-        public IResult Add(TestimonialCreateDto entity)
+        public IResult Add(TestimonialCreateDto entity, IFormFile photoUrl, string webRootPath)
         {
             var model = TestimonialCreateDto.ToTestimonial(entity);
-            //model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
             _testmonialDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
@@ -47,19 +47,19 @@ namespace Business.Concrete
             return new SuccessDataResult<Testimonial>(_testmonialDal.GetById(id));
         }
 
-        public IResult Update(TestimonialUpdateDto entity)
+        public IResult Update(TestimonialUpdateDto entity, IFormFile photoUrl, string webRootPath)
         {
             
             var model = TestimonialUpdateDto.ToTestimonial(entity);
             var existData = GetById(entity.Id).Data;
-            //if (photoUrl == null)
-            //{
-            //    model.PhotoUrl = existData.PhotoUrl;
-            //}
-            //else
-            //{
-            //    model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            //}
+            if (photoUrl == null)
+            {
+                model.PhotoUrl = existData.PhotoUrl;
+            }
+            else
+            {
+                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            }
             model.LastUpdateDate = DateTime.Now;
             _testmonialDal.Update(model);
 

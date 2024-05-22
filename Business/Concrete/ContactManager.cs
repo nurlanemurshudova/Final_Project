@@ -14,30 +14,49 @@ namespace Business.Concrete
     {
         private readonly IContactDal _contactDal;
         private readonly IValidator<Contact> _validator;
-        public ContactManager(IContactDal contactDal,IValidator<Contact> validator) 
+        public ContactManager(IContactDal contactDal, IValidator<Contact> validator)
         {
             _validator = validator;
             _contactDal = contactDal;
         }
-        public IResult Add(ContactCreateDto entity)
+        public IResult Add(ContactCreateDto entity, out Dictionary<string, string> propertyNames)
         {
             var model = ContactCreateDto.ToContact(entity);
             var validator = _validator.Validate(model);
-
-            string errorMessage = " ";
-            foreach (var item in validator.Errors)
-            {
-                errorMessage = item.ErrorMessage;
-            }
-
             if (!validator.IsValid)
             {
-                return new ErrorResult(errorMessage);
+                propertyNames = new();
+                foreach (var item in validator.Errors)
+                {
+                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
+                }
+                return new ErrorResult();
             }
+            propertyNames = null;
             _contactDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
+        //public IResult Add(ContactCreateDto entity)
+        //{
+        //    var model = ContactCreateDto.ToContact(entity);
+        //    var validator = _validator.Validate(model);
+
+        //    string errorMessage = " ";
+        //    foreach (var item in validator.Errors)
+        //    {
+        //        errorMessage = item.ErrorMessage;
+        //        //propertyNames += item.PropertyName;
+        //    }
+
+        //    if (!validator.IsValid)
+        //    {
+        //        return new ErrorResult(errorMessage);
+        //    }
+        //    _contactDal.Add(model);
+
+        //    return new SuccessResult(UIMessages.ADDED_MESSAGE);
+        //}
 
         public IResult Delete(int id)
         {

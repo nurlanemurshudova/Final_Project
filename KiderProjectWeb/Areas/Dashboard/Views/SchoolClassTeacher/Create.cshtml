@@ -1,0 +1,35 @@
+﻿@model SchoolClassTeacherCreateDto
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="SchoolClassId" class="control-label">Sinifler</label>
+                <select asp-for="SchoolClassId" class="form-control">
+                    @foreach (var item in ViewData["Classes"] as IEnumerable<SchoolClass>)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+             <div class="form-group">
+            <label asp-for="TeacherId" class="control-label">Muellimler</label>
+                 <select asp-for="TeacherId" class="form-control">
+                     @foreach (var item in ViewData["Teachers"] as IEnumerable<Teacher>)
+                     {
+                         <option value="@item.Id">@item.Name</option>
+                     }
+                 </select>
+             </div>
+            <div class="form-group">
+                <input type="submit" value="@DefaultConstantValue.ADD_MESSAGE" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">@DefaultConstantValue.RETURN_TO_BACK</a>
+</div>

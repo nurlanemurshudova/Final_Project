@@ -7,16 +7,11 @@ namespace Business.Abstract
 {
     public interface ITestimonialService
     {
-        //IResult Add(TestimonialCreateDto entity, IFormFile photoUrl, string webRootPath);
-        //IResult Update(TestimonialUpdateDto entity, IFormFile photoUrl, string webRootPath);
-        //IResult Delete(int id);
-        //IDataResult<List<Testimonial>> GetAll();
-        //IDataResult<Testimonial> GetById(int id);
-
-        IResult Add(TestimonialCreateDto entity);
-        IResult Update(TestimonialUpdateDto entity);
+        IResult Add(TestimonialCreateDto entity, IFormFile photoUrl, string webRootPath);
+        IResult Update(TestimonialUpdateDto entity, IFormFile photoUrl, string webRootPath);
         IResult Delete(int id);
         IDataResult<List<Testimonial>> GetAll();
         IDataResult<Testimonial> GetById(int id);
+
     }    
 }

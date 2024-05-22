@@ -8,18 +8,16 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
     public class SchoolClassController : Controller
     {
         private readonly ISchoolClassService _schoolClassService;
-        private readonly ITeacherService _teacherService;
         private readonly IWebHostEnvironment _env;
-        public SchoolClassController(ISchoolClassService schoolClassService, ITeacherService teacherService, IWebHostEnvironment env)
+        public SchoolClassController(ISchoolClassService schoolClassService, IWebHostEnvironment env)
         {
             _schoolClassService = schoolClassService;
-            _teacherService = teacherService;
             _env = env;
         }
 
         public IActionResult Index()
         {
-            var data = _schoolClassService.GetAll().Data;
+            var data = _schoolClassService.GetAllClassWithDetails().Data;
             return View(data);
         }
 
@@ -27,7 +25,6 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewData["Teachers"] = _teacherService.GetTeacherWithPositions().Data;
 
             return View();
         }
@@ -47,7 +44,6 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            ViewData["Teachers"] = _teacherService.GetTeacherWithPositions().Data;
 
             var data = _schoolClassService.GetById(id).Data;
 

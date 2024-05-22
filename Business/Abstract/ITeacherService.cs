@@ -2,14 +2,16 @@
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Entities.Concrete.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Abstract
 {
     public interface ITeacherService
     {
-        IResult Add(TeacherCreateDto entity);
-        IResult Update(TeacherUpdateDto entity);
+        IResult Add(TeacherCreateDto entity, IFormFile photoUrl, string webRootPath);
+        IResult Update(TeacherUpdateDto entity, IFormFile photoUrl, string webRootPath);
         IResult Delete(int id);
+        IDataResult<List<Teacher>> GetAll();
         IDataResult<List<TeacherDto>> GetTeacherWithPositions();
         IDataResult<List<TeacherVM>> GetAllTeacherWithDetails();
         IDataResult<TeacherVM> GetByIdTeacherWithDetails(int id);

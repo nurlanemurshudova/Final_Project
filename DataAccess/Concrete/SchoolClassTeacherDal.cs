@@ -18,31 +18,56 @@ namespace DataAccess.Concrete
 
         public List<SchoolClassTeacherVM> GetAllClassTeacherWithClass()
         {
-            throw new NotImplementedException();
+            var classTeacherList = (from scT in _context.SchoolClassTeachers
+                                    join sc in _context.SchoolClasses on scT.SchoolClassId equals sc.Id
+                                    join t in _context.Teachers on scT.TeacherId equals t.Id
+                                    where scT.Deleted == 0 && sc.Deleted == 0 && t.Deleted == 0
+                                    select new SchoolClassTeacherVM
+                                    {
+                                        TeacherId = t.Id,
+                                        TeacherName = t.Name,
+                                        SchoolClassId = sc.Id,
+                                        SchoolClassName = sc.Name
+                                    }).ToList();
+
+            return classTeacherList;
         }
 
         public SchoolClassTeacherVM GetByIdClassTeacherWithClass(int id)
         {
-            throw new NotImplementedException();
+            var classTeacher = (from scT in _context.SchoolClassTeachers
+                                join sc in _context.SchoolClasses on scT.SchoolClassId equals sc.Id
+                                join t in _context.Teachers on scT.TeacherId equals t.Id
+                                where scT.Id == id && scT.Deleted == 0 && sc.Deleted == 0 && t.Deleted == 0
+                                select new SchoolClassTeacherVM
+                                {
+                                    TeacherId = t.Id,
+                                    TeacherName = t.Name,
+                                    SchoolClassId = sc.Id,
+                                    SchoolClassName = sc.Name
+                                }).FirstOrDefault();
+
+            return classTeacher;
         }
 
-        public List<SchoolClassTeacherDto> GetClassTeacherWithClass()
-        {
 
-            var result = from crossTable in _context.SchoolClassTeachers
-                         from teacher in _context.Teachers
-                         where teacher.Deleted == 0
-                         join @class in _context.SchoolClasses
-                         on teacher.Id equals @class.Id
-                         where @class.Deleted == 0
-                         select new SchoolClassTeacherDto
-                         {
-                             Id = crossTable.Id,
-                             TeacherId = teacher.Id,
-                             SchoolClassId = @class.Id,
-                         };
+        //public List<SchoolClassTeacherDto> GetClassTeacherWithClass()
+        //{
 
-            return result.ToList();
-        }
+        //    var result = from crossTable in _context.SchoolClassTeachers
+        //                 from teacher in _context.Teachers
+        //                 where teacher.Deleted == 0
+        //                 join @class in _context.SchoolClasses
+        //                 on teacher.Id equals @class.Id
+        //                 where @class.Deleted == 0
+        //                 select new SchoolClassTeacherDto
+        //                 {
+        //                     Id = crossTable.Id,
+        //                     TeacherId = teacher.Id,
+        //                     SchoolClassId = @class.Id,
+        //                 };
+
+        //    return result.ToList();
+        //}
     }
 }

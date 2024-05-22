@@ -1,10 +1,10 @@
-﻿@model List<Slide>
+﻿@model List<SchoolClassTeacherVM>
 
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <form action="Slide/Create" method="get">
+                <form action="SchoolClassTeacher/Create" method="get">
                     <p>
                         <button class="btn btn-primary">@DefaultConstantValue.ADD_MESSAGE</button>
                     </p>
@@ -12,9 +12,8 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Başlıq</th>
-                            <th>Açıqlama</th>
-                            <th>Şəkil</th>
+                            <th>Sinif adi</th>
+                            <th>Muellim adi</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -22,18 +21,15 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Title</td>
-                                <td>@item.Description</td>
-                                @* <td class="partial-text">
-                                    <span class="visible-text">@Html.Raw(item.Description.Substring(0, 50) + "...")</span>
-                                    <span class="hidden-text" style="display: none;">@Html.Raw(item.Description)</span>
-                                </td> *@
-                                <td><img src="@item.PhotoUrl" style="width:100px; height:100px" alt="Slide Image" /></td>
+                                <td>@item.SchoolClassName</td>
+                                <td>@item.TeacherName</td>
+                                
+
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a> |
-                                    <a item-value="@item.Id" item-title="@item.Title" class="btnDelete">
+                                    <a item-value="@item.Id" item-title="@item.TeacherName" class="btnDelete">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -64,7 +60,7 @@
                     let itemTitle = e.currentTarget.attributes[1].value;
                     $.ajax({
                         method: "POST",
-                        url: "slide/delete/",
+                        url: "schoolClassTeacher/delete/",
                         data: {
                             id: itemId
                         }
@@ -75,7 +71,7 @@
                         icon: 'success',
 
                     }).then((result) => {
-                        window.location = "slide"
+                        window.location = "schoolClassTeacher"
                     })
 
                 }
@@ -83,5 +79,6 @@
         })
     </script>
 }
+
 
 

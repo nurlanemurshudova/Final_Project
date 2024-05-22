@@ -7,6 +7,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using Entities.Concrete.ViewModels;
 using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
@@ -45,10 +46,20 @@ namespace Business.Concrete
 
         }
 
+        public IDataResult<List<SchoolClassVM>> GetAllClassWithDetails()
+        {
+            return new SuccessDataResult<List<SchoolClassVM>>(_classDal.GetAllClassTeacherWithClass());
+        }
+
         public IDataResult<SchoolClass> GetById(int id)
         {
             return new SuccessDataResult<SchoolClass>(_classDal.GetById(id));
 
+        }
+
+        public IDataResult<SchoolClassVM> GetByIdClassWithDetails(int id)
+        {
+            return new SuccessDataResult<SchoolClassVM>(_classDal.GetByIdClassTeacherWithClass(id));
         }
 
         public IResult Update(SchoolClassUpdateDto entity, IFormFile photoUrl, string webRootPath)

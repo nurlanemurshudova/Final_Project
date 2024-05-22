@@ -5,15 +5,18 @@ using Core.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using FluentValidation;
 
 namespace Business.Concrete
 {
     public class PositionManager : IPositionService
     {
         private readonly IPositionDal _positionDal;
-        public PositionManager(IPositionDal positionDal)
+        private readonly IValidator<Position> _validator;
+        public PositionManager(IPositionDal positionDal,IValidator<Position> validator)
         {
             _positionDal = positionDal;
+            _validator = validator;
         }
         public IResult Add(PositionCreateDto entity)
         {

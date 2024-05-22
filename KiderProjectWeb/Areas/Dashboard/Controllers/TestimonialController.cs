@@ -30,11 +30,9 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        //public IActionResult Create(TestimonialCreateDto testimonial, IFormFile photoUrl)
-        public IActionResult Create(TestimonialCreateDto testimonial)
+        public IActionResult Create(TestimonialCreateDto testimonial, IFormFile photoUrl)
         {
-            //var result = _testimonialService.Add(testimonial, photoUrl, _env.WebRootPath);
-            var result = _testimonialService.Add(testimonial);
+            var result = _testimonialService.Add(testimonial, photoUrl, _env.WebRootPath);
             if (result.IsSuccess)
                 return RedirectToAction("Index");
 
@@ -50,10 +48,9 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        //public IActionResult Edit(TestimonialUpdateDto testimonial, IFormFile photoUrl)
-        public IActionResult Edit(TestimonialUpdateDto testimonial)
+        public IActionResult Edit(TestimonialUpdateDto testimonial, IFormFile photoUrl)
         {
-            var result = _testimonialService.Update(testimonial);
+            var result = _testimonialService.Update(testimonial, photoUrl, _env.WebRootPath);
 
             if (result.IsSuccess) return RedirectToAction("Index");
 

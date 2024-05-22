@@ -6,6 +6,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using Entities.Concrete.ViewModels;
 
 namespace Business.Concrete
 {
@@ -16,9 +17,10 @@ namespace Business.Concrete
         {
             _schoolClassTeacherDal = schoolClassTeacherDal;
         }
-        public IResult Add(SchoolClassTeacher entity)
+        public IResult Add(SchoolClassTeacherCreateDto entity)
         {
-            _schoolClassTeacherDal.Add(entity);
+            var model = SchoolClassTeacherCreateDto.ToClassTeacher(entity);
+            _schoolClassTeacherDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
@@ -38,9 +40,10 @@ namespace Business.Concrete
             return new SuccessDataResult<SchoolClassTeacher>(_schoolClassTeacherDal.GetById(id));
         }
 
-        public IDataResult<List<SchoolClassTeacherDto>> GetClassTeacherWithClass()
+        public IDataResult<List<SchoolClassTeacher>> GetAll()
         {
-            throw new NotImplementedException();
+            return new SuccessDataResult<List<SchoolClassTeacher>>(_schoolClassTeacherDal.GetAll(x => x.Deleted == 0));
+
         }
 
         //public IDataResult<List<SchoolClassTeacherDto>> GetClassTeacherWithClass()
@@ -48,12 +51,18 @@ namespace Business.Concrete
         //    //return new SuccessDataResult<List<SchoolClassTeacherDto>>(_schoolClassTeacherDal.GetClassTeacherWithClass());
         //}
 
-        public IResult Update(SchoolClassTeacher entity)
+        public IResult Update(SchoolClassTeacherUpdateDto entity)
         {
-            entity.LastUpdateDate = DateTime.Now;
-            _schoolClassTeacherDal.Update(entity);
+            var model = SchoolClassTeacherUpdateDto.ToClassTeacher(entity);
+            model.LastUpdateDate = DateTime.Now;
+            _schoolClassTeacherDal.Update(model);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
+        }
+
+        public IDataResult<List<SchoolClassTeacherVM>> GetAllClassTeacherWithClass()
+        {
+            return new SuccessDataResult<List<SchoolClassTeacherVM>>(_schoolClassTeacherDal.GetAllClassTeacherWithClass());
         }
     }
 }

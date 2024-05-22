@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
 using DataAccess.Abstract;
@@ -7,6 +8,7 @@ using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Entities.Concrete.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace Business.Concrete
 {
@@ -17,9 +19,10 @@ namespace Business.Concrete
         {
             _teacherDal = teacherDal;
         }
-        public IResult Add(TeacherCreateDto entity)
+        public IResult Add(TeacherCreateDto entity, IFormFile photoUrl, string webRootPath)
         {
             var model = TeacherCreateDto.ToTeacher(entity);
+            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
             _teacherDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
@@ -45,9 +48,18 @@ namespace Business.Concrete
             return new SuccessDataResult<Teacher>(_teacherDal.GetById(id));
         }
 
-        public IResult Update(TeacherUpdateDto entity)
+        public IResult Update(TeacherUpdateDto entity, IFormFile photoUrl, string webRootPath)
         {
             var model = TeacherUpdateDto.ToTeacher(entity);
+            var existData = GetById(entity.Id).Data;
+            if (photoUrl == null)
+            {
+                model.PhotoUrl = existData.PhotoUrl;
+            }
+            else
+            {
+                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            }
             model.LastUpdateDate = DateTime.Now;
             _teacherDal.Update(model);
 
@@ -62,6 +74,13 @@ namespace Business.Concrete
         public IDataResult<TeacherVM> GetByIdTeacherWithDetails(int id)
         {
             return new SuccessDataResult<TeacherVM>(_teacherDal.GetByIdClassTeacherWithClass(id));
+        }
+
+
+        public IDataResult<List<Teacher>> GetAll()
+        {
+            return new SuccessDataResult<List<Teacher>>(_teacherDal.GetAll(x => x.Deleted == 0));
+
         }
     }
 }

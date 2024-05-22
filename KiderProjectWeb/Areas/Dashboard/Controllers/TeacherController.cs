@@ -10,10 +10,12 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
     {
         private readonly ITeacherService _teacherService;
         private readonly IPositionService _positionService;
-        public TeacherController(ITeacherService teacherService, IPositionService positionService)
+        private readonly IWebHostEnvironment _env;
+        public TeacherController(ITeacherService teacherService, IPositionService positionService, IWebHostEnvironment env)
         {
             _teacherService = teacherService;
             _positionService = positionService;
+            _env = env;
         }
 
         public IActionResult Index()
@@ -30,9 +32,9 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(TeacherCreateDto teacher)
+        public IActionResult Create(TeacherCreateDto teacher, IFormFile photoUrl)
         {
-            var result = _teacherService.Add(teacher);
+            var result = _teacherService.Add(teacher,photoUrl,_env.WebRootPath);
 
             if (result.IsSuccess)
             {
@@ -53,9 +55,9 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(TeacherUpdateDto teacher)
+        public IActionResult Edit(TeacherUpdateDto teacher, IFormFile photoUrl)
         {
-            var result = _teacherService.Update(teacher);
+            var result = _teacherService.Update(teacher, photoUrl, _env.WebRootPath);
 
 
             if (result.IsSuccess)

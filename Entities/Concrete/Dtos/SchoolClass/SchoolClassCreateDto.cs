@@ -22,7 +22,6 @@ namespace Entities.Concrete.Dtos
                 Capacity = dto.Capacity,
                 Price = dto.Price,
                 PhotoUrl = dto.PhotoUrl,
-                
             };
             return schoolClass;
         }

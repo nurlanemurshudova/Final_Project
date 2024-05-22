@@ -9,6 +9,7 @@ namespace Entities.Concrete.ViewModels
 {
     public class SchoolClassVM
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string ChildAge { get; set; }
         public bool IsHomePage { get; set; }

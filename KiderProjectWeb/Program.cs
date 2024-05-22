@@ -43,6 +43,7 @@ namespace KiderProjectWeb
 
             builder.Services.AddScoped<IPositionDal, PositionDal>();
             builder.Services.AddScoped<IPositionService, PositionManager>();
+            builder.Services.AddScoped<IValidator<Position>, PositionValidation>();
 
             builder.Services.AddScoped<ISchoolClassDal, SchoolClassDal>();
             builder.Services.AddScoped<ISchoolClassService, SchoolClassManager>();

@@ -8,7 +8,6 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<SchoolClassTeacher> builder)
         {
-            // Many-to-Many ilişkisini belirtme
 
             builder.HasKey(sct => new { sct.TeacherId, sct.SchoolClassId });
 
@@ -20,5 +19,5 @@ namespace DataAccess.Configurations
                 .WithMany(sc => sc.SchoolClassTeachers)
                 .HasForeignKey(sct => sct.SchoolClassId);
         }
-}
+    }
 }
