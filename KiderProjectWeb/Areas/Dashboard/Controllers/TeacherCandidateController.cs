@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
@@ -29,11 +30,17 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(TeacherCandidateCreateDto teacherCandidate,IFormFile photoUrl)
+        public IActionResult Create(TeacherCandidateCreateDto teacherCandidate, IFormFile photoUrl)
         {
-            var result = _teacherCandidateService.Add(teacherCandidate,photoUrl,_env.WebRootPath);
-            if (result.IsSuccess)
-                return RedirectToAction("Index");
+            if (photoUrl != null)
+            {
+                var result = _teacherCandidateService.Add(teacherCandidate, photoUrl, _env.WebRootPath);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", result.Message);
+            }
 
             return View(teacherCandidate);
         }
@@ -47,13 +54,18 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(TeacherCandidateUpdateDto teacherCandidate,IFormFile photoUrl)
+        public IActionResult Edit(TeacherCandidateUpdateDto teacherCandidate, IFormFile photoUrl)
         {
             var result = _teacherCandidateService.Update(teacherCandidate, photoUrl, _env.WebRootPath);
 
-            if (result.IsSuccess) return RedirectToAction("Index");
+            if (!result.IsSuccess)
+            {
+                ModelState.Clear();
+                ModelState.AddModelError("", result.Message);
+                return View();
+            }
 
-            return View(teacherCandidate);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

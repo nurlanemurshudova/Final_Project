@@ -8,6 +8,7 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<SchoolClassTeacher> builder)
         {
+            builder.ToTable("SchoolClassTeachers");
 
             builder.HasKey(sct => new { sct.TeacherId, sct.SchoolClassId });
 

@@ -39,23 +39,18 @@ namespace DataAccess.Configurations
             builder.Property(t => t.Experience)
                 .IsRequired();
 
+            builder.HasOne(x => x.Position)
+                .WithMany(x => x.Teachers)
+                .HasForeignKey(x => x.PositionId);
+
             builder.Property(x => x.IsHomePage)
                .HasDefaultValue(false)
               .IsRequired();
 
-            //builder.HasMany(t => t.SchoolClasses)
-            //       .WithMany(c => c.Teachers)
-            //       .UsingEntity(j => j.ToTable("SchoolClassTeachers"));
         }
     }
 
 
 
 
-
-    /*
-
-        public List<Position> Positions { get; set; }
-        public List<SchoolClass> SchoolClasses { get; set;}
-    */
 }

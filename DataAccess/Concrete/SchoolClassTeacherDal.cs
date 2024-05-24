@@ -50,24 +50,5 @@ namespace DataAccess.Concrete
             return classTeacher;
         }
 
-
-        //public List<SchoolClassTeacherDto> GetClassTeacherWithClass()
-        //{
-
-        //    var result = from crossTable in _context.SchoolClassTeachers
-        //                 from teacher in _context.Teachers
-        //                 where teacher.Deleted == 0
-        //                 join @class in _context.SchoolClasses
-        //                 on teacher.Id equals @class.Id
-        //                 where @class.Deleted == 0
-        //                 select new SchoolClassTeacherDto
-        //                 {
-        //                     Id = crossTable.Id,
-        //                     TeacherId = teacher.Id,
-        //                     SchoolClassId = @class.Id,
-        //                 };
-
-        //    return result.ToList();
-        //}
     }
 }

@@ -33,11 +33,14 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         {
             var result = _positionService.Add(position);
 
-            if (result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                return RedirectToAction("Index");
+                ModelState.Clear();
+                ModelState.AddModelError("Name", result.Message);
+                return View(position);
             }
-            return View(position);
+
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public IActionResult Edit(int id)
@@ -52,9 +55,14 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         {
             var result = _positionService.Update(position);
 
-            if (result.IsSuccess) return RedirectToAction("Index");
+            if (!result.IsSuccess)
+            {
+                ModelState.Clear();
+                ModelState.AddModelError("Name", result.Message);
+                return View();
+            }
 
-            return View(position);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

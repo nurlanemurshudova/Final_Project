@@ -1,6 +1,4 @@
-﻿using Core.Results.Concrete;
-using Entities.Concrete.TableModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {

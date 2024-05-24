@@ -28,10 +28,12 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(ContactCreateDto contact)
         {
-            var result = _contactService.Add(contact, out Dictionary<string, string> properties);
+            var result = _contactService.Add(contact, out Dictionary<string, string> propertyNames);
             if (!result.IsSuccess)
             {
-                AddModelError(properties);
+                //ModelState.Clear();
+                //ModelState.AddModelError("", result.Message);
+                AddModelError(propertyNames);
                 return View(contact);
             }
             return RedirectToAction("Index");
@@ -48,11 +50,16 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(ContactUpdateDto contact)
         {
-            var result = _contactService.Update(contact);
+            var result = _contactService.Update(contact, out Dictionary<string, string> propertyNames);
 
-            if (result.IsSuccess) return RedirectToAction("Index");
-
-            return View(contact);
+            if (!result.IsSuccess)
+            {
+                //ModelState.Clear();
+                //ModelState.AddModelError("", result.Message);
+                AddModelError(propertyNames);
+                return View();
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

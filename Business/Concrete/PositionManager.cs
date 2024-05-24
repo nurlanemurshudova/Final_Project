@@ -1,8 +1,12 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Business.Validations;
+using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
+using Core.Validation;
 using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using FluentValidation;
@@ -12,15 +16,20 @@ namespace Business.Concrete
     public class PositionManager : IPositionService
     {
         private readonly IPositionDal _positionDal;
-        private readonly IValidator<Position> _validator;
-        public PositionManager(IPositionDal positionDal,IValidator<Position> validator)
+        public PositionManager(IPositionDal positionDal)
         {
             _positionDal = positionDal;
-            _validator = validator;
         }
         public IResult Add(PositionCreateDto entity)
         {
             var model = PositionCreateDto.ToPosition(entity);
+            var validator = ValidationTool.Validate(new PositionValidation(), model, out List<ValidationErrorModel> errors);
+
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
+
             _positionDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
@@ -51,6 +60,13 @@ namespace Business.Concrete
         public IResult Update(PositionUpdateDto entity)
         {
             var model = PositionUpdateDto.ToPosition(entity);
+            var validator = ValidationTool.Validate(new PositionValidation(), model, out List<ValidationErrorModel> errors);
+
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
+
             model.LastUpdateDate = DateTime.Now;
             _positionDal.Update(model);
 

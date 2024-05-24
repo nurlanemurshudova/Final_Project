@@ -555,6 +555,21 @@ namespace DataAccess.Migrations
                     b.ToTable("Testimonials", (string)null);
                 });
 
+            modelBuilder.Entity("SchoolClassTeacher", b =>
+                {
+                    b.Property<int>("SchoolClassesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeachersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SchoolClassesId", "TeachersId");
+
+                    b.HasIndex("TeachersId");
+
+                    b.ToTable("SchoolClassTeacher");
+                });
+
             modelBuilder.Entity("Entities.Concrete.TableModels.GurdianNumber", b =>
                 {
                     b.HasOne("Entities.Concrete.TableModels.Appointment", "Appointment")
@@ -594,6 +609,21 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Position");
+                });
+
+            modelBuilder.Entity("SchoolClassTeacher", b =>
+                {
+                    b.HasOne("Entities.Concrete.TableModels.SchoolClass", null)
+                        .WithMany()
+                        .HasForeignKey("SchoolClassesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrete.TableModels.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Entities.Concrete.TableModels.Appointment", b =>

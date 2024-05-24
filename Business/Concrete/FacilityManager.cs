@@ -1,8 +1,12 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Business.Validations;
+using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
+using Core.Validation;
 using DataAccess.Abstract;
+using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using FluentValidation;
@@ -12,29 +16,26 @@ namespace Business.Concrete
     public class FacilityManager : IFacilityService
     {
         private readonly IFacilityDal _facilityDal;
-        private readonly IValidator<Facility> _validator;
-        public FacilityManager(IFacilityDal facilityDal,IValidator<Facility> validator) 
+        public FacilityManager(IFacilityDal facilityDal) 
         {
             _facilityDal = facilityDal;
-            _validator = validator;
         }
-        public IResult Add(FacilityCreateDto entity)
+        public IResult Add(FacilityCreateDto entity,out Dictionary<string, string> propertyNames)
         {
             var model = FacilityCreateDto.ToFacility(entity);
-            var validator = _validator.Validate(model);
+            var validator = ValidationTool.Validate(new FacilityValidation(), model, out List<ValidationErrorModel> errors);
 
-            string errorMessage = " ";
-            foreach (var item in validator.Errors)
+            if (!validator)
             {
-                errorMessage = item.ErrorMessage;
-            }
-
-            if (!validator.IsValid)
-            {
-                return new ErrorResult(errorMessage);
+                propertyNames = new();
+                foreach (var item in errors)
+                {
+                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
+                }
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
             _facilityDal.Add(model);
-
+            propertyNames = null;
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
 
         }
@@ -60,9 +61,21 @@ namespace Business.Concrete
             return new SuccessDataResult<Facility>(_facilityDal.GetById(id));
         }
 
-        public IResult Update(FacilityUpdateDto entity)
+        public IResult Update(FacilityUpdateDto entity, out Dictionary<string, string> propertyNames)
         {
             var model = FacilityUpdateDto.ToFacility(entity);
+            var validator = ValidationTool.Validate(new FacilityValidation(), model, out List<ValidationErrorModel> errors);
+
+            if (!validator)
+            {
+                propertyNames = new();
+                foreach (var item in errors)
+                {
+                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
+                }
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
+            propertyNames = null;
             model.LastUpdateDate = DateTime.Now;
             _facilityDal.Update(model);
 

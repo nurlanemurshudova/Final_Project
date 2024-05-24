@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Business.Validations;
 using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
+using Core.Validation;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
@@ -22,8 +24,14 @@ namespace Business.Concrete
         {
             var model = SlideCreateDto.ToSlide(entity);
             model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            _slideDal.Add(model);
+            var validator = ValidationTool.Validate(new SlideValidation(), model, out List<ValidationErrorModel> errors);
 
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
+
+            _slideDal.Add(model);
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
 
@@ -61,7 +69,12 @@ namespace Business.Concrete
             {
                 model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
             }
+            var validator = ValidationTool.Validate(new SlideValidation(), model, out List<ValidationErrorModel> errors);
 
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
             model.LastUpdateDate = DateTime.Now;
             _slideDal.Update(model);
 

@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
@@ -34,13 +35,16 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(TeacherCreateDto teacher, IFormFile photoUrl)
         {
-            var result = _teacherService.Add(teacher,photoUrl,_env.WebRootPath);
 
-            if (result.IsSuccess)
+            if (photoUrl != null)
             {
-                return RedirectToAction("Index");
+                var result = _teacherService.Add(teacher, photoUrl, _env.WebRootPath);
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", result.Message);
             }
-
             return View(teacher);
         }
 
@@ -60,11 +64,14 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
             var result = _teacherService.Update(teacher, photoUrl, _env.WebRootPath);
 
 
-            if (result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                return RedirectToAction("Index");
+                ModelState.Clear();
+                ModelState.AddModelError("", result.Message);
+                return View();
             }
-            return View(teacher);
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

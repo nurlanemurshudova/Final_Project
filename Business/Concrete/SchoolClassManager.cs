@@ -1,10 +1,11 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Business.Validations;
 using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
+using Core.Validation;
 using DataAccess.Abstract;
-using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Entities.Concrete.ViewModels;
@@ -25,9 +26,39 @@ namespace Business.Concrete
             //classDal.Add(entity);
             var model = SchoolClassCreateDto.ToSchoolClass(entity);
             model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            _classDal.Add(model);
+            var validator = ValidationTool.Validate(new SchoolClassValidation(), model, out List<ValidationErrorModel> errors);
 
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
+            _classDal.Add(model);
+            _classDal.AddWithTeacher(model, entity);
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
+        }
+        public IResult Update(SchoolClassUpdateDto entity, IFormFile photoUrl, string webRootPath)
+        {
+            var model = SchoolClassUpdateDto.ToSchoolClass(entity);
+            var existData = GetById(entity.Id).Data;
+            if (photoUrl == null)
+            {
+                model.PhotoUrl = existData.PhotoUrl;
+            }
+            else
+            {
+                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            }
+
+            var validator = ValidationTool.Validate(new SchoolClassValidation(), model, out List<ValidationErrorModel> errors);
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
+
+            model.LastUpdateDate = DateTime.Now;
+            _classDal.Update(model);
+
+            return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }
 
         public IResult Delete(int id)
@@ -62,22 +93,6 @@ namespace Business.Concrete
             return new SuccessDataResult<SchoolClassVM>(_classDal.GetByIdClassTeacherWithClass(id));
         }
 
-        public IResult Update(SchoolClassUpdateDto entity, IFormFile photoUrl, string webRootPath)
-        {
-            var model = SchoolClassUpdateDto.ToSchoolClass(entity);
-            var existData = GetById(entity.Id).Data;
-            if (photoUrl == null)
-            {
-                model.PhotoUrl = existData.PhotoUrl;
-            }
-            else
-            {
-                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            }
-            model.LastUpdateDate = DateTime.Now;
-            _classDal.Update(model);
-
-            return new SuccessResult(UIMessages.UPDATE_MESSAGE);
-        }
+       
     }
 }

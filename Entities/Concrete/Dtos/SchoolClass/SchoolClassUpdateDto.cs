@@ -12,6 +12,7 @@ namespace Entities.Concrete.Dtos
         public byte Capacity { get; set; }
         public decimal Price { get; set; }
         public string PhotoUrl { get; set; }
+        public int[] TeacherIds { get; set; }
         public static SchoolClass ToSchoolClass(SchoolClassUpdateDto dto)
         {
             SchoolClass schoolClass = new SchoolClass()

@@ -1,4 +1,5 @@
-﻿using Entities.Concrete.TableModels;
+﻿using Business.BaseMessages;
+using Entities.Concrete.TableModels;
 using FluentValidation;
 
 namespace Business.Validations
@@ -9,11 +10,11 @@ namespace Business.Validations
         {
             RuleFor(x => x.Name)
                             .NotEmpty()
-                            .WithMessage("Boş ola bilməz")
+                            .WithMessage(UIMessages.GetRequiredMessage("Ad"))
                             .MinimumLength(3)
-                            .WithMessage("3 simvoldan az daxil edilə bilməz")
+                            .WithMessage(UIMessages.GetMinLengthMessage(3,"Ad"))
                             .MaximumLength(100)
-                            .WithMessage("100 simvoldan çox ola bilməz");
+                            .WithMessage(UIMessages.GetMaxLengthMessage(100,"Ad"));
 
         }
     }

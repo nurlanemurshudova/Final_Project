@@ -1,7 +1,10 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Business.Validations;
+using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
+using Core.Validation;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
@@ -13,30 +16,39 @@ namespace Business.Concrete
     public class AppointmentManager : IAppointmentService
     {
         private readonly IAppointmentDal _appointmentDal;
-        private readonly IValidator<Appointment> _validator;
-        public AppointmentManager(IAppointmentDal appointmentDal,IValidator<Appointment> validator)
+        public AppointmentManager(IAppointmentDal appointmentDal)
         {
             _appointmentDal = appointmentDal;
-            _validator = validator;
         }
 
-        public IResult Add(AppointmentCreateDto entity)
+        public IResult Add(AppointmentCreateDto entity, out Dictionary<string, string> propertyNames)
         {
             var model = AppointmentCreateDto.ToAppointment(entity);
-            var validator = _validator.Validate(model);
+            var validator = ValidationTool.Validate(new AppointmentValidation(), model, out List<ValidationErrorModel> errors);
 
-            string errorMessage = " ";
-            foreach (var item in validator.Errors)
+            if (!validator)
             {
-                errorMessage = item.ErrorMessage;
+                propertyNames = new();
+                foreach (var item in errors)
+                {
+                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
+                }
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
+            propertyNames = null;
+            //var validator = _validator.Validate(model);
 
-            if (!validator.IsValid)
-            {
-                return new ErrorResult(errorMessage);
-            }
+            //string errorMessage = " ";
+            //foreach (var item in validator.Errors)
+            //{
+            //    errorMessage = item.ErrorMessage;
+            //}
+
+            //if (!validator.IsValid)
+            //{
+            //    return new ErrorResult(errorMessage);
+            //}
             _appointmentDal.Add(model);
-
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
 
@@ -60,9 +72,21 @@ namespace Business.Concrete
             return new SuccessDataResult<Appointment>(_appointmentDal.GetById(id));
         }
 
-        public IResult Update(AppointmentUpdateDto entity)
+        public IResult Update(AppointmentUpdateDto entity, out Dictionary<string, string> propertyNames)
         {
             var model = AppointmentUpdateDto.ToAppointment(entity);
+            var validator = ValidationTool.Validate(new AppointmentValidation(), model, out List<ValidationErrorModel> errors);
+
+            if (!validator)
+            {
+                propertyNames = new();
+                foreach (var item in errors)
+                {
+                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
+                }
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
+            propertyNames = null;
             model.LastUpdateDate = DateTime.Now;
             _appointmentDal.Update(model);
 

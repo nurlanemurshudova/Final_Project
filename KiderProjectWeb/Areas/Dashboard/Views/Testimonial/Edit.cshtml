@@ -21,10 +21,15 @@
                 <textarea asp-for="Feedback" class="form-control" id="answer"></textarea>
                 <span asp-validation-for="Feedback" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PhotoUrl" class="control-label">Şəkil</label>
-                <input asp-for="PhotoUrl" name="PhotoUrl" class="form-control" type="file" />
-                <span asp-validation-for="PhotoUrl" class="text-danger"></span>
+            <div class="form-group" style="min-height:300px;">
+                <div class="card">
+                    <div class="card-body">
+                        <img class="img-fluid" src="@Model.PhotoUrl" />
+                    </div>
+                    <div class="card p-3 mt-3">
+                        <input type="file" asp-for="PhotoUrl" name="PhotoUrl" />
+                    </div>
+                </div>
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">

@@ -1,9 +1,11 @@
 ﻿using Entities.Concrete.TableModels;
+using Entities.Concrete.ViewModels;
 
 namespace Entities.Concrete.Dtos
 {
     public class SchoolClassCreateDto
     {
+
         public string Name { get; set; }
         public string ChildAge { get; set; }
         public bool IsHomePage { get; set; }
@@ -11,6 +13,7 @@ namespace Entities.Concrete.Dtos
         public byte Capacity { get; set; }
         public decimal Price { get; set; }
         public string PhotoUrl { get; set; }
+        public int[] TeacherIds { get; set; }
         public static SchoolClass ToSchoolClass(SchoolClassCreateDto dto)
         {
             SchoolClass schoolClass = new SchoolClass()

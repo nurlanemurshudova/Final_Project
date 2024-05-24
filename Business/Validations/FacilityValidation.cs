@@ -1,4 +1,5 @@
-﻿using Entities.Concrete.TableModels;
+﻿using Business.BaseMessages;
+using Entities.Concrete.TableModels;
 using FluentValidation;
 
 namespace Business.Validations
@@ -9,21 +10,21 @@ namespace Business.Validations
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
-                .WithMessage("Ad boş ola bilməz")
+                .WithMessage(UIMessages.GetRequiredMessage("Ad"))
                 .MaximumLength(100)
-                .WithMessage("Ad 100 simvoldan çox ola bilməz");
+                .WithMessage(UIMessages.GetMaxLengthMessage(100,"Ad"));
 
             RuleFor(x => x.Description)
                 .NotEmpty()
-                .WithMessage("Açıqlama boş ola bilməz")
+                .WithMessage(UIMessages.GetRequiredMessage("Açıqlama"))
                 .MaximumLength(1000)
-                .WithMessage("Açıqlama 1000 simvoldan çox ola bilməz");
+                .WithMessage(UIMessages.GetMaxLengthMessage(1000, "Açıqlama"));
 
             RuleFor(x => x.IconName)
                 .NotEmpty()
-                .WithMessage("İkon adı boş ola bilməz")
+                .WithMessage(UIMessages.GetRequiredMessage("İkon adı"))
                 .MaximumLength(150)
-                .WithMessage("İkon adı 150 simvoldan çox ola bilməz");
+                .WithMessage(UIMessages.GetMaxLengthMessage(150, "İkon adı"));
         }
     }
 }

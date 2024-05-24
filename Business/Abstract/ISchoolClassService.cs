@@ -16,6 +16,4 @@ namespace Business.Abstract
         IDataResult<SchoolClassVM> GetByIdClassWithDetails(int id);
         IDataResult<SchoolClass> GetById(int id);
     }    
-
-
 }

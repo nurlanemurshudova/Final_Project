@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Business.Validations;
 using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
+using Core.Validation;
 using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
@@ -22,6 +24,12 @@ namespace Business.Concrete
         {
             var model = TestimonialCreateDto.ToTestimonial(entity);
             model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            var validator = ValidationTool.Validate(new TestimonialValidation(), model, out List<ValidationErrorModel> errors);
+
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
             _testmonialDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
@@ -59,6 +67,12 @@ namespace Business.Concrete
             else
             {
                 model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            }
+            var validator = ValidationTool.Validate(new TestimonialValidation(), model, out List<ValidationErrorModel> errors);
+
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
             model.LastUpdateDate = DateTime.Now;
             _testmonialDal.Update(model);

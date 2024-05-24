@@ -1,32 +1,30 @@
-using KiderProjectWeb.Models;
+using Business.Abstract;
+using KiderProjectWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace KiderProjectWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IAboutService _aboutService;
+        private readonly ITestimonialService _testimonialService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IAboutService aboutService, ITestimonialService testimonialService)
         {
-            _logger = logger;
+            _aboutService = aboutService;
+            _testimonialService = testimonialService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var aboutData = _aboutService.GetAll().Data;
+            HomeViewModel viewModel = new()
+            {
+                Abouts = aboutData,
+            };
+            return View(viewModel);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+       
     }
 }

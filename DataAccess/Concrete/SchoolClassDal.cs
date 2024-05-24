@@ -1,9 +1,9 @@
 ﻿using Core.DataAccess.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Context;
+using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Entities.Concrete.ViewModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Concrete
 {
@@ -15,6 +15,23 @@ namespace DataAccess.Concrete
         {
             _context = context;
         }
+
+        public void AddWithTeacher(SchoolClass schoolClass, SchoolClassCreateDto dto)
+        {
+            foreach (var teacherId in dto.TeacherIds)
+            {
+                var teacher = _context.Teachers.Find(teacherId);
+
+                var classTeacher = new SchoolClassTeacher
+                {
+                    SchoolClassId = schoolClass.Id,
+                    Teacher = teacher,
+                };
+                _context.SchoolClassTeachers.Add(classTeacher);
+            }
+            _context.SaveChanges();
+        }
+
 
         public List<SchoolClassVM> GetAllClassTeacherWithClass()
         {
@@ -60,6 +77,11 @@ namespace DataAccess.Concrete
             schoolClass.SchoolClassTeachers = GetSchoolClassTeachersDetails(schoolClass, id);
 
             return schoolClass;
+        }
+
+        public void UpdateWithTeacher(SchoolClass schoolClass, SchoolClassUpdateDto dto)
+        {
+            throw new NotImplementedException();
         }
 
         private List<SchoolClassTeacherVM> GetSchoolClassTeachersDetails(SchoolClassVM schoolClass, int id)

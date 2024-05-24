@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    public class GurdianNumberController : Controller
+    public class GurdianNumberController : BaseController
     {
         private readonly IGurdianNumberService _gurdianNumberService;
         private readonly IAppointmentService _appointmentService;
@@ -35,15 +35,13 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(GurdianNumberCreateDto gurdianNumber)
         {
-            var result = _gurdianNumberService.Add(gurdianNumber);
-
+            var result = _gurdianNumberService.Add(gurdianNumber, out Dictionary<string, string> properties);
             if (!result.IsSuccess)
             {
                 ViewData["Appointments"] = _appointmentService.GetAll().Data;
-                ModelState.AddModelError("", result.Message);
+                AddModelError(properties);
                 return View(gurdianNumber);
             }
-
             return RedirectToAction("Index");
 
         }
@@ -61,14 +59,14 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(GurdianNumberUpdateDto gurdianNumber)
         {
-            var result = _gurdianNumberService.Update(gurdianNumber);
-
-
-            if (result.IsSuccess)
+            var result = _gurdianNumberService.Update(gurdianNumber, out Dictionary<string, string> properties);
+            if (!result.IsSuccess)
             {
-                return RedirectToAction("Index");
+                ViewData["Appointments"] = _appointmentService.GetAll().Data;
+                AddModelError(properties);
+                return View();
             }
-            return View(gurdianNumber);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

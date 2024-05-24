@@ -1,4 +1,5 @@
-﻿using Entities.Concrete.TableModels;
+﻿using Business.BaseMessages;
+using Entities.Concrete.TableModels;
 using FluentValidation;
 
 namespace Business.Validations
@@ -9,29 +10,31 @@ namespace Business.Validations
         {
             RuleFor(x => x.GurdianName)
                 .NotEmpty()
-                .WithMessage("Valideyn adı boş ola bilməz")
+                .WithMessage(UIMessages.GetRequiredMessage("Valideyn adı"))
                 .MaximumLength(100)
-                .WithMessage("Valideyn adı 100 simvoldan çox ola bilməz");
+                .WithMessage(UIMessages.GetMaxLengthMessage(100, "Valideyn adı"));
 
             RuleFor(x => x.GurdianEmail)
                 .NotEmpty()
-                .WithMessage("Valideynin e-poçt ünvanı boş ola bilməz")
+                .WithMessage(UIMessages.GetRequiredMessage("Email"))
                 .EmailAddress()
-                .WithMessage("Doğru e-poçt ünvanı daxil edin");
+                .WithMessage(UIMessages.GetEmailErrorMessage());
 
             RuleFor(x => x.ChildName)
                 .NotEmpty()
-                .WithMessage("Uşağın adı boş ola bilməz")
+                .WithMessage(UIMessages.GetRequiredMessage("Uşağın adı"))
                 .MaximumLength(100)
-                .WithMessage("Uşağın adı 100 simvoldan çox ola bilməz");
+                .WithMessage(UIMessages.GetMaxLengthMessage(100,"Uşağın adı"));
 
             RuleFor(x => x.ChildAge)
                 .NotEmpty()
-                .WithMessage("Boş ola bilməz");
+                .WithMessage(UIMessages.GetRequiredMessage("Uşağın yaşı"));
 
             RuleFor(x => x.Message)
+                .NotEmpty()
+                .WithMessage(UIMessages.GetRequiredMessage("Mesaj"))
                 .MaximumLength(2000)
-                .WithMessage("Mesaj 2000 simvoldan çox ola bilməz");
+                .WithMessage(UIMessages.GetMaxLengthMessage(2000,"Mesaj"));
         }
     }
 }

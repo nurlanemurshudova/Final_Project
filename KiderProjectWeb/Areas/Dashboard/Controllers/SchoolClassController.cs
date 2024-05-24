@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
@@ -8,10 +9,12 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
     public class SchoolClassController : Controller
     {
         private readonly ISchoolClassService _schoolClassService;
+        private readonly ITeacherService _teacherService;
         private readonly IWebHostEnvironment _env;
-        public SchoolClassController(ISchoolClassService schoolClassService, IWebHostEnvironment env)
+        public SchoolClassController(ISchoolClassService schoolClassService, IWebHostEnvironment env,ITeacherService teacherService)
         {
             _schoolClassService = schoolClassService;
+            _teacherService = teacherService;
             _env = env;
         }
 
@@ -25,28 +28,33 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-
+            ViewData["Teachers"] = _teacherService.GetAll().Data;
             return View();
         }
 
         [HttpPost]
         public IActionResult Create(SchoolClassCreateDto schoolClass, IFormFile photoUrl)
         {
-            var result = _schoolClassService.Add(schoolClass, photoUrl, _env.WebRootPath);
-
-            if (result.IsSuccess)
+            if (photoUrl != null)
             {
-                return RedirectToAction("Index");
+                var result = _schoolClassService.Add(schoolClass, photoUrl, _env.WebRootPath);
+
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", result.Message);
             }
+            ViewData["Teachers"] = _teacherService.GetAll().Data;
             return View(schoolClass);
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-
             var data = _schoolClassService.GetById(id).Data;
 
+            ViewData["Teachers"] = _teacherService.GetAll().Data;
             return View(data);
         }
 
@@ -54,13 +62,13 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         public IActionResult Edit(SchoolClassUpdateDto dto, IFormFile photoUrl)
         {
             var result = _schoolClassService.Update(dto, photoUrl, _env.WebRootPath);
-
-
-            if (result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                return RedirectToAction("Index");
+                ModelState.AddModelError("", result.Message);
+                return View();
             }
-            return View(dto);
+            ViewData["Teachers"] = _teacherService.GetAll().Data;
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

@@ -1,8 +1,10 @@
 ﻿using Business.Abstract;
 using Business.BaseMessages;
+using Business.Validations;
 using Core.Extension;
 using Core.Results.Abstract;
 using Core.Results.Concrete;
+using Core.Validation;
 using DataAccess.Abstract;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
@@ -21,6 +23,12 @@ namespace Business.Concrete
         {
             var model = TeacherCandidateCreateDto.ToTeacherCandidate(entity);
             model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            var validator = ValidationTool.Validate(new TeacherCandidateValidation(), model, out List<ValidationErrorModel> errors);
+
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            }
             _teacherCandidateDal.Add(model);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
@@ -57,6 +65,12 @@ namespace Business.Concrete
             else
             {
                 model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            }
+            var validator = ValidationTool.Validate(new TeacherCandidateValidation(), model, out List<ValidationErrorModel> errors);
+
+            if (!validator)
+            {
+                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
             model.LastUpdateDate = DateTime.Now;
             _teacherCandidateDal.Update(model);

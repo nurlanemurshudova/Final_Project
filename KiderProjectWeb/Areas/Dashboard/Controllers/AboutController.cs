@@ -34,6 +34,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
             var result = _aboutService.Add(dto);
             if (!result.IsSuccess)
             {
+                ModelState.Clear();
                 ModelState.AddModelError("Description", result.Message);
                 return View();
             }
@@ -54,9 +55,15 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         {
             var result = _aboutService.Update(dto);
 
-            if (result.IsSuccess) return RedirectToAction("Index");
+            if (!result.IsSuccess)
+            {
+                ModelState.Clear();
+                ModelState.AddModelError("Description", result.Message);
+                return View();
+            }
 
-            return View(dto);
+            return RedirectToAction("Index");
+
         }
     }
 }

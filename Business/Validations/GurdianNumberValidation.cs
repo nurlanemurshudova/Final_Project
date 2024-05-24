@@ -1,4 +1,5 @@
-﻿using Entities.Concrete.TableModels;
+﻿using Business.BaseMessages;
+using Entities.Concrete.TableModels;
 using FluentValidation;
 
 namespace Business.Validations
@@ -9,17 +10,15 @@ namespace Business.Validations
         {
             RuleFor(x => x.Number)
                 .NotEmpty()
-                .WithMessage("Nömrə boş ola bilməz")
+                .WithMessage(UIMessages.GetRequiredMessage("Nömrə"))
                 .MaximumLength(20)
-                .WithMessage("Nömrə 20 simvoldan çox ola bilməz")
+                .WithMessage(UIMessages.GetMaxLengthMessage(20, "Nömrə"))
                 .Matches(@"^\+?\d+$")
-                .WithMessage("Nömrə yalnız rəqəmlərdən və isteğe bağlı olaraq '+' işarəsindən ibarət olmalıdır");
+                .WithMessage("Nömrə yalnız rəqəmlərdən və ya '+' işarəsindən ibarət olmalıdır");
 
             RuleFor(x => x.AppontmentId)
                 .NotEmpty()
-                .WithMessage("AppointmentId boş ola bilməz")
-                .GreaterThan(0)
-                .WithMessage("AppointmentId 0-dan böyük olmalıdır");
+                .WithMessage(UIMessages.GetRequiredMessage(""));
         }
     }
 }

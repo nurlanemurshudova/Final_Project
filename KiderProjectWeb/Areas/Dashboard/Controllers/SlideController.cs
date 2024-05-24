@@ -31,11 +31,18 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(SlideCreateDto slide, IFormFile photoUrl)
         {
-            var result = _slideService.Add(slide,photoUrl,_env.WebRootPath);
-            if (result.IsSuccess)
-                return RedirectToAction("Index");
+            if (photoUrl != null)
+            {
+                var result = _slideService.Add(slide, photoUrl, _env.WebRootPath);
 
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError("", result.Message);
+            }
             return View(slide);
+
         }
 
         [HttpGet]
@@ -51,9 +58,14 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         {
             var result = _slideService.Update(slide, photoUrl, _env.WebRootPath);
 
-            if (result.IsSuccess) return RedirectToAction("Index");
+            if (!result.IsSuccess)
+            {
+                ModelState.Clear();
+                ModelState.AddModelError("", result.Message);
+                return View();
+            }
 
-            return View(slide);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    public class AppointmentController : Controller
+    public class AppointmentController : BaseController
     {
-        private readonly IAppointmentService _appointmentService; 
+        private readonly IAppointmentService _appointmentService;
         public AppointmentController(IAppointmentService appointmentService)
         {
             _appointmentService = appointmentService;
@@ -28,14 +28,18 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(AppointmentCreateDto appointment)
         {
-            var result = _appointmentService.Add(appointment);
-            if (result.IsSuccess)
+            var result = _appointmentService.Add(appointment, out Dictionary<string, string> propertyNames);
+            if (!result.IsSuccess)
             {
-                ModelState.AddModelError("", result.Message);
-                return RedirectToAction("Index");
+                //ModelState.Clear();
+                //ModelState.AddModelError("",result.Message);
+                AddModelError(propertyNames);
+                return View();
             }
 
-            return View(appointment);
+            return RedirectToAction("Index");
+
+
         }
 
         [HttpGet]
@@ -49,21 +53,28 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(AppointmentUpdateDto appointment)
         {
-            var result = _appointmentService.Update(appointment);
+            var result = _appointmentService.Update(appointment, out Dictionary<string, string> propertyNames);
 
-            if (result.IsSuccess) return RedirectToAction("Index");
+            if (!result.IsSuccess)
+            {
+                //ModelState.Clear();
+                //ModelState.AddModelError("", result.Message);
+                AddModelError(propertyNames);
+                return View();
+            }
+            return RedirectToAction("Index");
 
-            return View(appointment);
         }
 
         [HttpPost]
         public IActionResult Delete(int id)
         {
             var result = _appointmentService.Delete(id);
-            if (result.IsSuccess)
-                return RedirectToAction("Index");
-
-            return View(result);
+            if (!result.IsSuccess)
+            {
+                return View();
+            }
+            return RedirectToAction("Index");
         }
     }
 }

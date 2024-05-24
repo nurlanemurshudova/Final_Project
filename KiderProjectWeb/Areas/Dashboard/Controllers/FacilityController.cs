@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    public class FacilityController : Controller
+    public class FacilityController : BaseController
     {
         private readonly IFacilityService _facilityService;
         public FacilityController(IFacilityService facilityService)
@@ -30,14 +30,13 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(FacilityCreateDto facility)
         {
-            var result = _facilityService.Add(facility);
-            if (result.IsSuccess)
+            var result = _facilityService.Add(facility, out Dictionary<string, string> properties);
+            if (!result.IsSuccess)
             {
-                ModelState.AddModelError("", result.Message);
-                return RedirectToAction("Index");
+                AddModelError(properties);
+                return View(facility);
             }
-
-            return View(facility);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -51,11 +50,14 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(FacilityUpdateDto facility)
         {
-            var result = _facilityService.Update(facility);
+            var result = _facilityService.Update(facility, out Dictionary<string, string> properties);
 
-            if (result.IsSuccess) return RedirectToAction("Index");
-
-            return View(facility);
+            if (!result.IsSuccess)
+            {
+                AddModelError(properties);
+                return View();
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
