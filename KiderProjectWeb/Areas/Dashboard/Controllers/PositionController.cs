@@ -2,11 +2,13 @@
 using Business.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
+    [Authorize]
     public class PositionController : Controller
     {
         private readonly IPositionService _positionService;

@@ -5,7 +5,9 @@ using DataAccess.Abstract;
 using DataAccess.Concrete;
 using DataAccess.Context;
 using Entities.Concrete.TableModels;
+using Entities.Concrete.TableModels.Membership;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 
 namespace KiderProjectWeb
 {
@@ -19,7 +21,30 @@ namespace KiderProjectWeb
             builder.Services.AddControllersWithViews();
 
 
-            builder.Services.AddDbContext<ApplicationDbContext>();
+            builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization();
+
+            builder.Services.AddDbContext<ApplicationDbContext>()
+                .AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredLength = 5;
+
+                options.User.RequireUniqueEmail = true;
+            });
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(20);
+                options.Cookie.Name = "KiderDb";
+                options.Cookie.HttpOnly = false;
+            });
 
             builder.Services.AddScoped<IAboutDal, AboutDal>();
             builder.Services.AddScoped<IAboutService, AboutManager>();
@@ -83,6 +108,7 @@ namespace KiderProjectWeb
             app.UseStaticFiles();
 
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -1,11 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
 using Entities.Concrete.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
+    [Authorize]
     public class SchoolClassTeacherController : Controller
     {
         private readonly ISchoolClassTeacherService _schoolClassTeacherService;

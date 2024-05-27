@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
+    [Authorize]
     public class TestimonialController : Controller
     {
         private readonly ITestimonialService _testimonialService;

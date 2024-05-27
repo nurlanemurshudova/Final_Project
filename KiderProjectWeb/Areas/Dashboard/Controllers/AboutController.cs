@@ -1,10 +1,12 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
+    [Authorize]
     public class AboutController : Controller
     {
         private readonly IAboutService _aboutService;

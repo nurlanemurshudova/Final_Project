@@ -196,7 +196,7 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" asp-area="" asp-action="LogOut" asp-controller="Account">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -287,10 +287,12 @@
     <script>
         document.querySelectorAll('.partial-text').forEach(item => {
             item.addEventListener('mouseover', function () {
+                this.querySelector('.visible-text').style.display = 'none';
                 this.querySelector('.hidden-text').style.display = 'inline';
             });
 
             item.addEventListener('mouseout', function () {
+                this.querySelector('.visible-text').style.display = 'inline';
                 this.querySelector('.hidden-text').style.display = 'none';
             });
         });

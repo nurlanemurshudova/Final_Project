@@ -23,10 +23,18 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                 <td class="partial-text">
-                                     <span class="visible-text">@Html.Raw(item.Description.Substring(0, 50))</span>
-                                     <span class="hidden-text" style="display: none;">@Html.Raw(item.Description)</span>
-                                 </td>
+                                <td class="partial-text">
+                                    @if (item.Description.Length > 50)
+                                    {
+
+                                        <span class="visible-text">@Html.Raw(item.Description.Substring(0, 50))</span>
+                                        <span class="hidden-text" style="display: none;">@Html.Raw(item.Description)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="visible-text">@(item.Description)</span>
+                                    }
+                                </td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id">
                                         <i class="fa-solid fa-pen-to-square"></i>

@@ -1,10 +1,12 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
+    [Authorize]
     public class ContactController : BaseController
     {
         private readonly IContactService _contactService;
