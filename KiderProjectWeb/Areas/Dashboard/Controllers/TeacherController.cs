@@ -47,6 +47,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
                 }
                 ModelState.AddModelError("", result.Message);
             }
+            ViewData["Positions"] = _positionService.GetAll().Data;
             return View(teacher);
         }
 
@@ -72,7 +73,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
                 ModelState.AddModelError("", result.Message);
                 return View();
             }
-
+            ViewData["Positions"] = _positionService.GetAll().Data;
             return RedirectToAction("Index");
         }
 

@@ -32,7 +32,26 @@ namespace DataAccess.Concrete
             _context.SaveChanges();
         }
 
+        public void UpdateWithTeacher(SchoolClass schoolClass, SchoolClassUpdateDto dto)
+        {
+            var existingTeachers = _context.SchoolClassTeachers
+                                   .Where(sct => sct.SchoolClassId == schoolClass.Id)
+                                   .ToList();
 
+            _context.SchoolClassTeachers.RemoveRange(existingTeachers);
+
+            foreach (var teacherId in dto.TeacherIds)
+            {
+                var classTeacher = new SchoolClassTeacher
+                {
+                    SchoolClassId = schoolClass.Id,
+                    TeacherId = teacherId
+                };
+                _context.SchoolClassTeachers.Add(classTeacher);
+            }
+
+            _context.SaveChanges();
+        }
         public List<SchoolClassVM> GetAllClassTeacherWithClass()
         {
             var classes = (from sc in _context.SchoolClasses
@@ -48,7 +67,7 @@ namespace DataAccess.Concrete
                                Price = sc.Price,
                                PhotoUrl = sc.PhotoUrl,
                            }).ToList();
-            if (classes == null && classes.Count > 0)
+            if (classes == null && classes.Count == 0)
                 return classes;
             foreach (var schoolClass in classes)
             {
@@ -60,7 +79,7 @@ namespace DataAccess.Concrete
         public SchoolClassVM GetByIdClassTeacherWithClass(int id)
         {
             var schoolClass = (from sc in _context.SchoolClasses
-                               where sc.Deleted == 0
+                               where sc.Id == id && sc.Deleted == 0
                                select new SchoolClassVM
                                {
                                    Id = sc.Id,
@@ -79,17 +98,14 @@ namespace DataAccess.Concrete
             return schoolClass;
         }
 
-        public void UpdateWithTeacher(SchoolClass schoolClass, SchoolClassUpdateDto dto)
-        {
-            throw new NotImplementedException();
-        }
+
 
         private List<SchoolClassTeacherVM> GetSchoolClassTeachersDetails(SchoolClassVM schoolClass, int id)
         {
             return (from scT in _context.SchoolClassTeachers
                     join sc in _context.SchoolClasses on scT.SchoolClassId equals sc.Id
                     join t in _context.Teachers on scT.TeacherId equals t.Id
-                    where t.Id == id && t.Deleted == 0 && scT.Deleted == 0 && sc.Deleted == 0
+                    where sc.Id == id && t.Deleted == 0 && scT.Deleted == 0 && sc.Deleted == 0
                     select new SchoolClassTeacherVM
                     {
                         TeacherId = t.Id,
@@ -98,5 +114,6 @@ namespace DataAccess.Concrete
                         SchoolClassName = sc.Name
                     }).ToList();
         }
+
     }
 }

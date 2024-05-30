@@ -1,4 +1,4 @@
-﻿@model SchoolClassCreateDto
+﻿@model SchoolClassTeacherVM
 <style>
     .error-span {
         color: red;
@@ -62,47 +62,27 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label">Adı</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="SchoolClassName" class="control-label">Sinif Adı</label>
+                <input asp-for="SchoolClassName" class="form-control" readonly />
+                <span asp-validation-for="SchoolClassName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Time" class="control-label">Tarix</label>
-                <input asp-for="Time" class="form-control" />
-                <span asp-validation-for="Time" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Capacity" class="control-label">Usaq sayi</label>
-                <input asp-for="Capacity" class="form-control" />
-                <span asp-validation-for="Capacity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChildAge" class="control-label">Usaq yasi</label>
-                <input asp-for="ChildAge" class="form-control" />
-                <span asp-validation-for="ChildAge" class="text-danger"></span>
-            </div>
-            <div class="form-group d-flex align-items-center">
-                <span style="margin-right:1rem;">Ana səhifədə olsun:</span>
-                <input asp-for="IsHomePage" type="checkbox" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label">Qiymeti</label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhotoUrl" class="control-label">Şəkil</label>
-                <input asp-for="PhotoUrl" name="PhotoUrl" class="form-control" type="file" />
-                <span asp-validation-for="PhotoUrl" class="text-danger"></span>
-            </div>
+            @* <div class="form-group">
+                <label asp-for="SchoolClassId" class="control-label">Sinif</label>
+                <select asp-for="SchoolClassId" class="form-control">
+                    @foreach (var item in ViewData["Classes"] as IEnumerable<SchoolClass>)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div> *@
             <div class="col-lg-8">
                 <div class="col-lg-12">
                     <div class="card-body card shadow right-sidebar-item">
                         <div class="form-group">
-                            <label>Müəllimlər:</label>
+                            <label>Muellimler:</label>
                             <div id="checkboxes2" class="checkboxes">
                                 @*  <div class="control">
                                 <input class="input search" type="text" placeholder="Search" id="search" />
@@ -113,7 +93,7 @@
                                 @foreach (var teacher in ViewData["Teachers"] as IEnumerable<Teacher>)
                                 {
                                     <label for="teacher" class="select_label">
-                                        <input type="checkbox" class="checkbox" value="@teacher.Id" name="teacherIds" id="@teacher.Name" />@teacher.Name
+                                        <input type="checkbox" class="checkbox" value="@teacher.Id" name="teacherIds" id="@teacher.Name"/>@teacher.Name
                                         <span class="select_label-icon"></span>
                                     </label>
                                 }

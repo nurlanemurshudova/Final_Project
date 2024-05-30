@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
+using Entities.Concrete.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +14,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         private readonly ISchoolClassService _schoolClassService;
         private readonly ITeacherService _teacherService;
         private readonly IWebHostEnvironment _env;
-        public SchoolClassController(ISchoolClassService schoolClassService, IWebHostEnvironment env,ITeacherService teacherService)
+        public SchoolClassController(ISchoolClassService schoolClassService, IWebHostEnvironment env, ITeacherService teacherService)
         {
             _schoolClassService = schoolClassService;
             _teacherService = teacherService;
@@ -54,23 +55,41 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var data = _schoolClassService.GetById(id).Data;
+            //var data = _schoolClassService.GetById(id).Data;
 
+            //ViewData["Teachers"] = _teacherService.GetAll().Data;
+            //return View(data);
+            var classResult = _schoolClassService.GetByIdClassWithDetails(id).Data;
+            var selectedClassTeacherIds = new List<int>();
+            if (classResult.SchoolClassTeachers != null)
+            {
+                selectedClassTeacherIds = classResult.SchoolClassTeachers.Select(sct => sct.TeacherId).ToList();
+            }
             ViewData["Teachers"] = _teacherService.GetAll().Data;
-            return View(data);
+            ViewData["SelectedClassTeacherIds"] = selectedClassTeacherIds;
+
+            return View(classResult);
         }
+
+            
+
 
         [HttpPost]
         public IActionResult Edit(SchoolClassUpdateDto dto, IFormFile photoUrl)
         {
-            var result = _schoolClassService.Update(dto, photoUrl, _env.WebRootPath);
-            if (!result.IsSuccess)
+            if (photoUrl != null)
             {
+                var result = _schoolClassService.Update(dto, photoUrl, _env.WebRootPath);
+
+                if (result.IsSuccess)
+                {
+                    return RedirectToAction("Index");
+                }
                 ModelState.AddModelError("", result.Message);
-                return View();
             }
             ViewData["Teachers"] = _teacherService.GetAll().Data;
-            return RedirectToAction("Index");
+            return View();
+
         }
 
         [HttpPost]

@@ -3,6 +3,7 @@ using Business.Concrete;
 using Entities.Concrete.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
@@ -23,51 +24,31 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         public IActionResult Index()
         {
             var data = _schoolClassTeacherService.GetAllClassTeacherWithClass().Data;
-
-            return View(data);       
-        }
-        [HttpGet]
-        public IActionResult Create()
-        {
-            ViewData["Teachers"] = _teacherService.GetAll().Data;
-            ViewData["Classes"] = _classService.GetAll().Data;
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Create(SchoolClassTeacherCreateDto classTeacher)
-        {
-            var result = _schoolClassTeacherService.Add(classTeacher);
-
-            if (result.IsSuccess)
-            {
-                return RedirectToAction("Index");
-            }
-
-            return View(classTeacher);
+            return View(data);
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            ViewData["Teachers"] = _teacherService.GetAllTeacherWithDetails().Data;
-            ViewData["Classes"] = _classService.GetAll().Data;
-            var data = _schoolClassTeacherService.GetById(id).Data;
+            ViewData["Teachers"] = _teacherService.GetAll().Data;
+            var data = _schoolClassTeacherService.GetByIdClassTeacherWithClass(id).Data;
 
             return View(data);
         }
 
         [HttpPost]
-        public IActionResult Edit(SchoolClassTeacherUpdateDto schoolClass)
+        public IActionResult Edit(SchoolClassTeacherUpdateDto classTeacher)
         {
-            var result = _schoolClassTeacherService.Update(schoolClass);
+            var result = _schoolClassTeacherService.Update(classTeacher);
 
 
-            if (result.IsSuccess)
+            if (!result.IsSuccess)
             {
-                return RedirectToAction("Index");
+                ModelState.AddModelError("", result.Message);
+                return View(classTeacher);
             }
-            return View(schoolClass);
+            ViewData["Teachers"] = _teacherService.GetAll().Data;
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

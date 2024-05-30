@@ -10,5 +10,6 @@
         public byte Capacity { get; set; }
         public decimal Price { get; set; }
         public string PhotoUrl { get; set; }
+        //public string TeacherName { get; set; }
     }
 }

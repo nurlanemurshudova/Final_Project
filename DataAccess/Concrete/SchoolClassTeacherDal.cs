@@ -24,6 +24,7 @@ namespace DataAccess.Concrete
                                     where scT.Deleted == 0 && sc.Deleted == 0 && t.Deleted == 0
                                     select new SchoolClassTeacherVM
                                     {
+                                        Id = scT.Id,
                                         TeacherId = t.Id,
                                         TeacherName = t.Name,
                                         SchoolClassId = sc.Id,
@@ -41,6 +42,7 @@ namespace DataAccess.Concrete
                                 where scT.Id == id && scT.Deleted == 0 && sc.Deleted == 0 && t.Deleted == 0
                                 select new SchoolClassTeacherVM
                                 {
+                                   // Id = id,
                                     TeacherId = t.Id,
                                     TeacherName = t.Name,
                                     SchoolClassId = sc.Id,

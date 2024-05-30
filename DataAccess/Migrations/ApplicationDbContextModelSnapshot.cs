@@ -520,11 +520,11 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Concrete.TableModels.SchoolClassTeacher", b =>
                 {
-                    b.Property<int>("TeacherId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("SchoolClassId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 10000L);
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -532,15 +532,22 @@ namespace DataAccess.Migrations
                     b.Property<int>("Deleted")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("LastUpdateDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("TeacherId", "SchoolClassId");
+                    b.Property<int>("SchoolClassId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("SchoolClassId");
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
+
+                    b.HasIndex("SchoolClassId", "TeacherId", "Deleted")
+                        .IsUnique()
+                        .HasDatabaseName("idx_Name_Deleted");
 
                     b.ToTable("SchoolClassTeachers", (string)null);
                 });
@@ -764,21 +771,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Testimonials", (string)null);
                 });
 
-            modelBuilder.Entity("SchoolClassTeacher", b =>
-                {
-                    b.Property<int>("SchoolClassesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeachersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SchoolClassesId", "TeachersId");
-
-                    b.HasIndex("TeachersId");
-
-                    b.ToTable("SchoolClassTeacher");
-                });
-
             modelBuilder.Entity("Entities.Concrete.TableModels.GurdianNumber", b =>
                 {
                     b.HasOne("Entities.Concrete.TableModels.Appointment", "Appointment")
@@ -869,21 +861,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Position");
-                });
-
-            modelBuilder.Entity("SchoolClassTeacher", b =>
-                {
-                    b.HasOne("Entities.Concrete.TableModels.SchoolClass", null)
-                        .WithMany()
-                        .HasForeignKey("SchoolClassesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Entities.Concrete.TableModels.Teacher", null)
-                        .WithMany()
-                        .HasForeignKey("TeachersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Entities.Concrete.TableModels.Appointment", b =>

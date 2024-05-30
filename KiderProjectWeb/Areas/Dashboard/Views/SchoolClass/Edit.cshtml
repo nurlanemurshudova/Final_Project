@@ -1,4 +1,4 @@
-﻿@model SchoolClass
+﻿@model SchoolClassVM
 <style>
     .error-span {
         color: red;
@@ -107,7 +107,7 @@
                 <div class="col-lg-12">
                     <div class="card-body card shadow right-sidebar-item">
                         <div class="form-group">
-                            <label>Taglar:</label>
+                            <label>Müəllimlər:</label>
                             <div id="checkboxes2" class="checkboxes">
                                 @*  <div class="control">
                                 <input class="input search" type="text" placeholder="Search" id="search" />
@@ -115,13 +115,26 @@
                                 <span class="searchIcon"></span>
                                 </span>
                                 </div> *@
+                                @* @foreach (var teacher in ViewData["Teachers"] as IEnumerable<Teacher>)
+                                {
+                                    <label for="@teacher.Name" class="select_label">
+                                        <input type="checkbox" class="checkbox" value="@teacher.Id" name="teacherIds" id="@teacher.Name" />@teacher.Name
+                                        <span class="select_label-icon"></span>
+                                    </label>
+                                } *@
+
                                 @foreach (var teacher in ViewData["Teachers"] as IEnumerable<Teacher>)
                                 {
-                                    <label for="teacher" class="select_label">
-                                        <input type="checkbox" class="checkbox" value="@teacher.Id" name="teacherIds" id="@teacher.Name" checked="@Model.Teachers" />@teacher.Name
+                                    var isSelected = ViewData["SelectedClassTeacherIds"] != null && ((List<int>)ViewData["SelectedClassTeacherIds"]).Contains(teacher.Id);
+                                    <label for="@teacher.Name" class="select_label">
+                                        <input type="checkbox" class="checkbox" value="@teacher.Id.ToString()" name="teacherIds" id="@teacher.Name" @(isSelected ? "checked" : "") />
+                                        @teacher.Name
                                         <span class="select_label-icon"></span>
                                     </label>
                                 }
+
+
+
                             </div>
                         </div>
                     </div>
@@ -138,4 +151,18 @@
 <div>
     <a asp-action="Index">@DefaultConstantValue.RETURN_TO_BACK</a>
 </div>
+
+<script>
+    // Checkbox işareti değiştiğinde, ilgili öğretmenin ID'sini gönder
+    $('.checkbox').change(function () {
+        if (!this.checked) {
+            var teacherId = $(this).val();
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'teacherIdsToRemove',
+                value: teacherId
+            }).appendTo('#editForm');
+        }
+    });
+</script>
 

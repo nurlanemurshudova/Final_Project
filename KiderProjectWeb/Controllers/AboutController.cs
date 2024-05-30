@@ -19,7 +19,7 @@ namespace KiderProjectWeb.Controllers
         public IActionResult Index()
         {
             var aboutData = _aboutService.GetAll().Data;
-            var teacherData = _teacherService.GetAll().Data;
+            var teacherData = _teacherService.GetTeacherWithPositions().Data;
             HomeViewModel viewModel = new()
             {
                 Abouts = aboutData,

@@ -12,7 +12,7 @@ namespace Business.Abstract
         IResult Delete(int id);
         IDataResult<List<SchoolClassTeacher>> GetAll();
         IDataResult<List<SchoolClassTeacherVM>> GetAllClassTeacherWithClass();
-        //IDataResult<List<SchoolClassTeacherDto>> GetClassTeacherWithClass();
+        IDataResult<SchoolClassTeacherVM> GetByIdClassTeacherWithClass(int id);
         IDataResult<SchoolClassTeacher> GetById(int id);
     }
 }

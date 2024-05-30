@@ -4,11 +4,11 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <form action="SchoolClassTeacher/Create" method="get">
-                    <p>
-                        <button class="btn btn-primary">@DefaultConstantValue.ADD_MESSAGE</button>
-                    </p>
-                </form>
+                @* <form action="SchoolClassTeacher/Create" method="get">
+                <p>
+                <button class="btn btn-primary">@DefaultConstantValue.ADD_MESSAGE</button>
+                </p>
+                </form> *@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -18,23 +18,40 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @{
+                            var groupedData = Model.GroupBy(item => item.SchoolClassName)
+                            .ToList();
+                        }
+                        @foreach (var group in groupedData)
                         {
                             <tr>
-                                <td>@item.SchoolClassName</td>
-                                <td>@item.TeacherName</td>
-                                
-
+                                <td>@group.Key</td>
+                                <td>@string.Join(", ", group.Select(g => g.TeacherName))</td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id">
+                                    <a asp-action="Edit" asp-route-id="@group.First().Id">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a> |
-                                    <a item-value="@item.Id" item-title="@item.TeacherName" class="btnDelete">
+                                    <a item-value="@group.First().Id" item-title="@string.Join(", ", group.Select(g => g.TeacherName))" class="btnDelete">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
                         }
+                        @* @foreach (var item in Model)
+                        {
+                        <tr>
+                        <td>@item.SchoolClassName</td>
+                        <td>@item.TeacherName</td>
+                        <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        </a> |
+                        <a item-value="@item.Id" item-title="@item.TeacherName" class="btnDelete">
+                        <i class="fas fa-trash"></i>
+                        </a>
+                        </td>
+                        </tr>
+                        } *@
                     </tbody>
                 </table>
             </div>

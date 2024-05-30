@@ -26,8 +26,16 @@
                                 <td>@item.FirstName</td>
                                 <td>@item.LastName</td>
                                 <td class="partial-text">
-                                    <span class="visible-text">@Html.Raw(item.Feedback.Substring(0, 50) + "...")</span>
-                                    <span class="hidden-text" style="display: none;">@Html.Raw(item.Feedback)</span>
+                                    @if (item.Feedback.Length > 50)
+                                    {
+
+                                        <span class="visible-text">@Html.Raw(item.Feedback.Substring(0, 50))</span>
+                                        <span class="hidden-text" style="display: none;">@Html.Raw(item.Feedback)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="visible-text">@(item.Feedback)</span>
+                                    }
                                 </td>
                                 <td><img src="@item.PhotoUrl" style="width:100px; height:100px" alt="Food Image" /></td>
                                 <td>

@@ -40,6 +40,10 @@ namespace Business.Validations
                 .NotEmpty()
                 .WithMessage("Şəkil URL boş ola bilməz");
 
+            RuleFor(x => x.SchoolClassTeachers)
+                .NotEmpty()
+                .WithMessage(UIMessages.GetRequiredMessage("Müəllim"));
+
         }
     }
 }

@@ -36,7 +36,7 @@ namespace DataAccess.Concrete
                                 IsHomePage = t.IsHomePage,
                                 Experience = t.Experience
                             }).ToList();
-            if (teacherList == null && teacherList.Count > 0)
+            if (teacherList == null && teacherList.Count == 0)
                 return teacherList;
             foreach (var teacher in teacherList)
             {
@@ -105,7 +105,7 @@ namespace DataAccess.Concrete
                              Experience = teacher.Experience,
                              IsHomePage = teacher.IsHomePage,
                              PhotoUrl = teacher.PhotoUrl,
-                             PositionName = teacher.Name,
+                             PositionName = position.Name,
                          };
 
             return result.ToList();

@@ -64,5 +64,10 @@ namespace Business.Concrete
         {
             return new SuccessDataResult<List<SchoolClassTeacherVM>>(_schoolClassTeacherDal.GetAllClassTeacherWithClass());
         }
+
+        public IDataResult<SchoolClassTeacherVM> GetByIdClassTeacherWithClass(int id)
+        {
+            return new SuccessDataResult<SchoolClassTeacherVM>(_schoolClassTeacherDal.GetByIdClassTeacherWithClass(id));
+        }
     }
 }

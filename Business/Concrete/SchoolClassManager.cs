@@ -39,7 +39,8 @@ namespace Business.Concrete
         public IResult Update(SchoolClassUpdateDto entity, IFormFile photoUrl, string webRootPath)
         {
             var model = SchoolClassUpdateDto.ToSchoolClass(entity);
-            var existData = GetById(entity.Id).Data;
+            var existData = GetByIdClassWithDetails(entity.Id).Data;
+            //var existData = GetById(entity.Id).Data;
             if (photoUrl == null)
             {
                 model.PhotoUrl = existData.PhotoUrl;
@@ -57,6 +58,7 @@ namespace Business.Concrete
 
             model.LastUpdateDate = DateTime.Now;
             _classDal.Update(model);
+            _classDal.UpdateWithTeacher(model, entity);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }
@@ -93,6 +95,6 @@ namespace Business.Concrete
             return new SuccessDataResult<SchoolClassVM>(_classDal.GetByIdClassTeacherWithClass(id));
         }
 
-       
+
     }
 }

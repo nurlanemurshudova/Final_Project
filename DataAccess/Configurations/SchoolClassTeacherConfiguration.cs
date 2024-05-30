@@ -1,4 +1,5 @@
-﻿using Entities.Concrete.TableModels;
+﻿using Core.DefaultValues;
+using Entities.Concrete.TableModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +11,10 @@ namespace DataAccess.Configurations
         {
             builder.ToTable("SchoolClassTeachers");
 
-            builder.HasKey(sct => new { sct.TeacherId, sct.SchoolClassId });
+            builder.Property(x => x.Id)
+                .UseIdentityColumn(seed: DefaultConstantValue.DEFAULT_PRIMARY_INCREMENT_VALUE, increment: 1);
+
+            //builder.HasKey(sct => new { sct.TeacherId, sct.SchoolClassId });
 
             builder.HasOne(sct => sct.Teacher)
                 .WithMany(t => t.SchoolClassTeachers)
@@ -19,6 +23,10 @@ namespace DataAccess.Configurations
             builder.HasOne(sct => sct.SchoolClass)
                 .WithMany(sc => sc.SchoolClassTeachers)
                 .HasForeignKey(sct => sct.SchoolClassId);
+
+            builder.HasIndex(x => new { x.SchoolClassId, x.TeacherId, x.Deleted })
+                .IsUnique()
+                .HasDatabaseName("idx_Name_Deleted");
         }
     }
 }
