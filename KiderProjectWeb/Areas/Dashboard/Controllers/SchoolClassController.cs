@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Entities.Concrete.ViewModels;
@@ -77,18 +78,17 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(SchoolClassUpdateDto dto, IFormFile photoUrl)
         {
-            if (photoUrl != null)
-            {
                 var result = _schoolClassService.Update(dto, photoUrl, _env.WebRootPath);
-
-                if (result.IsSuccess)
-                {
-                    return RedirectToAction("Index");
-                }
+            
+            if (!result.IsSuccess)
+            {
+                ModelState.Clear();
                 ModelState.AddModelError("", result.Message);
+                return View();
             }
+
             ViewData["Teachers"] = _teacherService.GetAll().Data;
-            return View();
+            return RedirectToAction("Index");
 
         }
 

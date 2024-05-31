@@ -32,7 +32,7 @@ namespace KiderProjectWeb.Controllers
             {
                 ApplicationUser user = new();
 
-                user = await _userManager.FindByEmailAsync(dto.Email);
+                user = await _userManager.FindByEmailAsync(dto.Email );
 
                 if (user == null)
                 {
@@ -44,6 +44,11 @@ namespace KiderProjectWeb.Controllers
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home", new { area = "Dashboard" });
+                }
+                else
+                {
+                    ViewBag.Message = "Email və ya şifrə yanlışdır";
+                    return View();
                 }
             }
         end:
