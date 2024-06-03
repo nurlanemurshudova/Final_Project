@@ -9,7 +9,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
     [Authorize]
-    public class TeacherCandidateController : Controller
+    public class TeacherCandidateController : BaseController
     {
         private readonly ITeacherCandidateService _teacherCandidateService;
         private readonly IWebHostEnvironment _env;
@@ -36,14 +36,16 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         {
             if (photoUrl != null)
             {
-                var result = _teacherCandidateService.Add(teacherCandidate, photoUrl, _env.WebRootPath);
-                if (result.IsSuccess)
-                {
-                    return RedirectToAction("Index");
-                }
-                ModelState.AddModelError("", result.Message);
+                ModelState.Clear();
+                ModelState.AddModelError("", "Şəkil boş ola bilməz");
+                return View(teacherCandidate);
             }
-
+            var result = _teacherCandidateService.Add(teacherCandidate, photoUrl, _env.WebRootPath, out Dictionary<string, string> propertyNames);
+            if (result.IsSuccess)
+            {
+                return RedirectToAction("Index");
+            }
+            AddModelError(propertyNames);
             return View(teacherCandidate);
         }
 
@@ -58,12 +60,11 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(TeacherCandidateUpdateDto teacherCandidate, IFormFile photoUrl)
         {
-            var result = _teacherCandidateService.Update(teacherCandidate, photoUrl, _env.WebRootPath);
+            var result = _teacherCandidateService.Update(teacherCandidate, photoUrl, _env.WebRootPath, out Dictionary<string, string> propertyNames);
 
             if (!result.IsSuccess)
             {
-                ModelState.Clear();
-                ModelState.AddModelError("", result.Message);
+                AddModelError(propertyNames);
                 return View();
             }
 

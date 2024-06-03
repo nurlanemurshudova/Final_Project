@@ -7,8 +7,8 @@ namespace Business.Abstract
 {
     public interface ITeacherCandidateService
     {
-        IResult Add(TeacherCandidateCreateDto entity, IFormFile photoUrl, string webRootPath);
-        IResult Update(TeacherCandidateUpdateDto entity, IFormFile photoUrl, string webRootPath);
+        IResult Add(TeacherCandidateCreateDto entity, IFormFile photoUrl, string webRootPath, out Dictionary<string, string> propertyNames);
+        IResult Update(TeacherCandidateUpdateDto entity, IFormFile photoUrl, string webRootPath, out Dictionary<string, string> propertyNames);
         IResult Delete(int id);
         IDataResult<List<TeacherCandidate>> GetAll();
         IDataResult<TeacherCandidate> GetById(int id);

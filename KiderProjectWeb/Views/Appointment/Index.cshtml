@@ -1,0 +1,98 @@
+﻿@model AppointmentCreateDto
+<!-- Page Header End -->
+<div class="container-xxl py-5 page-header position-relative mb-5">
+    <div class="container py-5">
+        <h1 class="display-2 text-white animated slideInDown mb-4">Qeydiyyat</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Ana səhifə</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Qeydiyyat</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="bg-light rounded">
+            <div class="row g-0">
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="h-100 d-flex flex-column justify-content-center p-5">
+                        <h1 class="mb-4">Uşaq qeydiyyatı</h1>
+                        <form asp-action="Index" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control border-0" asp-for="GurdianName" placeholder="Valideyn adı">
+                                        <label asp-for="GurdianName">Valideyn adı</label>
+                                        <span asp-validation-for="GurdianName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control border-0" asp-for="GurdianEmail" placeholder="Valideyn e-poçt ünvanı">
+                                        <label asp-for="GurdianEmail">Valideyn e-poçt ünvanı</label>
+                                        <span asp-validation-for="GurdianEmail" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control border-0" asp-for="ChildName" placeholder="Uşağın adı">
+                                        <label asp-for="ChildName">Uşağın adı</label>
+                                        <span asp-validation-for="ChildName" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-floating">
+                                        <input type="number" class="form-control border-0" asp-for="ChildAge" placeholder="Uşağın yaşı">
+                                        <label asp-for="ChildAge">Uşağın yaşı</label>
+                                        <span asp-validation-for="ChildAge" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control border-0" id="number1" placeholder="Təvəllüd">
+                                        <label for="number1">Nömrə 1</label>
+                                        @* <span asp-validation-for="BirthDate" class="text-danger"></span> *@
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control border-0" id="number" placeholder="Şəkil">
+                                        <label for="number">Nömrə 2</label>
+                                        @* <span asp-validation-for="PhotoUrl" class="text-danger"></span> *@
+
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit">Göndər</button>
+                                </div>
+
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute w-100 h-100 rounded" src="~/assets/img/appointment.jpg" style="object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        var message = '@Html.Raw(TempData["SuccessMessage"] != null ? TempData["SuccessMessage"].ToString() : "")';
+        if (message.trim() !== '') {
+            alert(message);
+        }
+    };
+</script>

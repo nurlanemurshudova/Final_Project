@@ -19,7 +19,7 @@ namespace Business.Concrete
         {
             _teacherCandidateDal = teacherCandidateDal;
         }
-        public IResult Add(TeacherCandidateCreateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Add(TeacherCandidateCreateDto entity, IFormFile photoUrl, string webRootPath, out Dictionary<string, string> propertyNames)
         {
             var model = TeacherCandidateCreateDto.ToTeacherCandidate(entity);
             model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
@@ -27,10 +27,15 @@ namespace Business.Concrete
 
             if (!validator)
             {
+                propertyNames = new();
+                foreach (var item in errors)
+                {
+                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
+                }
                 return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
+            propertyNames = null;
             _teacherCandidateDal.Add(model);
-
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
 
@@ -54,7 +59,7 @@ namespace Business.Concrete
             return new SuccessDataResult<TeacherCandidate>(_teacherCandidateDal.GetById(id));
         }
 
-        public IResult Update(TeacherCandidateUpdateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Update(TeacherCandidateUpdateDto entity, IFormFile photoUrl, string webRootPath, out Dictionary<string, string> propertyNames)
         {
             var model = TeacherCandidateUpdateDto.ToTeacherCandidate(entity);
             var existData = GetById(entity.Id).Data;
@@ -70,8 +75,14 @@ namespace Business.Concrete
 
             if (!validator)
             {
+                propertyNames = new();
+                foreach (var item in errors)
+                {
+                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
+                }
                 return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
+            propertyNames = null;
             model.LastUpdateDate = DateTime.Now;
             _teacherCandidateDal.Update(model);
 

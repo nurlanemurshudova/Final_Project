@@ -1,4 +1,6 @@
-using Business.Abstract;
+﻿using Business.Abstract;
+using Entities.Concrete.Dtos;
+using Entities.Concrete.TableModels;
 using KiderProjectWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,14 +15,16 @@ namespace KiderProjectWeb.Controllers
         private readonly ISchoolClassService _schoolClassService;
         private readonly ITeacherService _teacherService;
         private readonly ISchoolClassTeacherService _classTeacherService;
+        private readonly IAppointmentService _appointmentService;
 
-        public HomeController(IAboutService aboutService, 
+        public HomeController(IAboutService aboutService,
             ITestimonialService testimonialService,
             IFacilityService facilityService,
             ISlideService slideService,
             ISchoolClassService schoolClassService,
             ITeacherService teacherService,
-            ISchoolClassTeacherService classTeacherService)
+            ISchoolClassTeacherService classTeacherService,
+            IAppointmentService appointmentService)
         {
             _aboutService = aboutService;
             _testimonialService = testimonialService;
@@ -29,8 +33,8 @@ namespace KiderProjectWeb.Controllers
             _schoolClassService = schoolClassService;
             _teacherService = teacherService;
             _classTeacherService = classTeacherService;
+            _appointmentService = appointmentService;
         }
-
         public IActionResult Index()
         {
             var aboutData = _aboutService.GetAll().Data;
@@ -53,6 +57,5 @@ namespace KiderProjectWeb.Controllers
             return View(viewModel);
         }
 
-       
     }
 }

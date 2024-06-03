@@ -11,7 +11,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
             ModelState.Clear();
             foreach (var item in properties)
             {
-                    ModelState.AddModelError(item.Key, item.Value);
+                ModelState.AddModelError(item.Key, item.Value);
             }
         }
     }

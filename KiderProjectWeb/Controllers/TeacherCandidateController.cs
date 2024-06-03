@@ -23,15 +23,24 @@ namespace KiderProjectWeb.Controllers
         [HttpPost]
         public IActionResult Index(TeacherCandidateCreateDto teacherCandidate, IFormFile photoUrl)
         {
-            if (photoUrl != null)
+            if (photoUrl == null)
             {
-                var result = _teacherCandidateService.Add(teacherCandidate, photoUrl, _env.WebRootPath);
-                if (result.IsSuccess)
-                {
-                    TempData["SuccessMessage"] = "Məlumat uğurla göndərildi!";
-                    return RedirectToAction("Index");
-                }
-                ModelState.AddModelError("", result.Message);
+                ModelState.Clear();
+                ModelState.AddModelError("", "Fotoğraf yüklemesi gereklidir.");
+                return View(teacherCandidate);
+            }
+
+            var result = _teacherCandidateService.Add(teacherCandidate, photoUrl, _env.WebRootPath, out Dictionary<string, string> propertyNames);
+            if (result.IsSuccess)
+            {
+                TempData["SuccessMessage"] = "Məlumat uğurla göndərildi!";
+                return RedirectToAction("Index");
+            }
+
+            ModelState.Clear();
+            foreach (var item in propertyNames)
+            {
+                ModelState.AddModelError(item.Key, item.Value);
             }
 
             return View(teacherCandidate);
