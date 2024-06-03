@@ -102,17 +102,18 @@ namespace DataAccess.Concrete
 
         private List<SchoolClassTeacherVM> GetSchoolClassTeachersDetails(SchoolClassVM schoolClass, int id)
         {
-            return (from scT in _context.SchoolClassTeachers
-                    join sc in _context.SchoolClasses on scT.SchoolClassId equals sc.Id
-                    join t in _context.Teachers on scT.TeacherId equals t.Id
-                    where sc.Id == id && t.Deleted == 0 && scT.Deleted == 0 && sc.Deleted == 0
-                    select new SchoolClassTeacherVM
-                    {
-                        TeacherId = t.Id,
-                        TeacherName = t.Name,
-                        SchoolClassId = sc.Id,
-                        SchoolClassName = sc.Name
-                    }).ToList();
+            var data = (from scT in _context.SchoolClassTeachers
+                        join sc in _context.SchoolClasses on scT.SchoolClassId equals sc.Id
+                        join t in _context.Teachers on scT.TeacherId equals t.Id
+                        where sc.Id == id && t.Deleted == 0 && scT.Deleted == 0 && sc.Deleted == 0
+                        select new SchoolClassTeacherVM
+                        {
+                            TeacherId = t.Id,
+                            TeacherName = t.Name,
+                            SchoolClassId = sc.Id,
+                            SchoolClassName = sc.Name
+                        }).ToList();
+            return data;
         }
 
     }

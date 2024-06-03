@@ -78,7 +78,7 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(SchoolClassUpdateDto dto, IFormFile photoUrl)
         {
-                var result = _schoolClassService.Update(dto, photoUrl, _env.WebRootPath);
+            var result = _schoolClassService.Update(dto, photoUrl, _env.WebRootPath);
             
             if (!result.IsSuccess)
             {

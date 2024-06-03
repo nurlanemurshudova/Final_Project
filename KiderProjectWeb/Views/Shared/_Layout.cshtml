@@ -52,16 +52,14 @@
                 <div class="navbar-nav mx-auto">
                     <a asp-action="Index" asp-controller="Home" class="nav-item nav-link active">Ana səhifə</a>
                     <a asp-action="Index" asp-controller="About" class="nav-item nav-link">Haqqımızda</a>
-                    <a href="classes.html" class="nav-item nav-link">Siniflər</a>
+                    <a asp-action="Index" asp-controller="SchoolClass" class="nav-item nav-link">Siniflər</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Səhifələr</a>
                         <div class="dropdown-menu rounded-0 rounded-bottom border-0 shadow-sm m-0">
-                            <a href="facility.html" class="dropdown-item">Bağça imkanları</a>
                             <a href="team.html" class="dropdown-item">Müəllimlər</a>
-                            <a href="call-to-action.html" class="dropdown-item">Komandamıza qoşul</a>
+                            <a asp-action="Index" asp-controller="TeacherCandidate" class="dropdown-item">Komandamıza qoşul</a>
                             <a href="appointment.html" class="dropdown-item">Qeydiyyat</a>
                             <a href="testimonial.html" class="dropdown-item">Rəylər</a>
-                            <a href="404.html" class="dropdown-item">404 Error</a>
                         </div>
                     </div>
                     <a href="contact.html" class="nav-item nav-link">Əlaqə</a>

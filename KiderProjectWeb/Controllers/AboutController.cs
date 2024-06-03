@@ -20,7 +20,7 @@ namespace KiderProjectWeb.Controllers
         {
             var aboutData = _aboutService.GetAll().Data;
             var teacherData = _teacherService.GetTeacherWithPositions().Data;
-            HomeViewModel viewModel = new()
+            AboutViewModel viewModel = new()
             {
                 Abouts = aboutData,
                 Teachers = teacherData,
