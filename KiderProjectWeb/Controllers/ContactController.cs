@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KiderProjectWeb.Controllers
 {
-    public class AppointmentController : Controller
+    public class ContactController : Controller
     {
-        private readonly IAppointmentService _appointmentService;
-        public AppointmentController(IAppointmentService appointmentService)
+        private readonly IContactService _contactService;
+
+        public ContactController(IContactService contactService)
         {
-            _appointmentService = appointmentService;
+            _contactService = contactService;
         }
 
         [HttpGet]
@@ -18,9 +19,9 @@ namespace KiderProjectWeb.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Index(AppointmentCreateDto appointment)
+        public IActionResult Index(ContactCreateDto dto)
         {
-            var result = _appointmentService.Add(appointment, out Dictionary<string, string> propertyNames);
+            var result = _contactService.Add(dto, out Dictionary<string, string> propertyNames);
             if (!result.IsSuccess)
             {
                 ModelState.Clear();
@@ -28,12 +29,10 @@ namespace KiderProjectWeb.Controllers
                 {
                     ModelState.AddModelError(item.Key, item.Value);
                 }
-                return View(appointment);
+                return View(dto);
             }
             TempData["SuccessMessage"] = "Məlumat uğurla göndərildi!";
             return RedirectToAction("Index");
-
-
         }
     }
 }

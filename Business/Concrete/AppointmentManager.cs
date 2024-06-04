@@ -16,9 +16,11 @@ namespace Business.Concrete
     public class AppointmentManager : IAppointmentService
     {
         private readonly IAppointmentDal _appointmentDal;
-        public AppointmentManager(IAppointmentDal appointmentDal)
+        private readonly IGurdianNumberDal _numberDal;
+        public AppointmentManager(IAppointmentDal appointmentDal, IGurdianNumberDal numberDal)
         {
             _appointmentDal = appointmentDal;
+            _numberDal = numberDal;
         }
 
         public IResult Add(AppointmentCreateDto entity, out Dictionary<string, string> propertyNames)
@@ -36,19 +38,12 @@ namespace Business.Concrete
                 return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
             propertyNames = null;
-            //var validator = _validator.Validate(model);
-
-            //string errorMessage = " ";
-            //foreach (var item in validator.Errors)
-            //{
-            //    errorMessage = item.ErrorMessage;
-            //}
-
-            //if (!validator.IsValid)
-            //{
-            //    return new ErrorResult(errorMessage);
-            //}
             _appointmentDal.Add(model);
+            foreach (var gurdianNumber in model.GurdianNumbers)
+            {
+                gurdianNumber.AppontmentId = model.Id;
+                _numberDal.Add(gurdianNumber);
+            }
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
 

@@ -55,17 +55,24 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control border-0" id="number1" placeholder="Təvəllüd">
-                                        <label for="number1">Nömrə 1</label>
-                                        @* <span asp-validation-for="BirthDate" class="text-danger"></span> *@
-
+                                        <input type="text" class="form-control border-0" asp-for="GurdianNumber1" placeholder="Təvəllüd">
+                                        <label asp-for="GurdianNumber1">Nömrə 1</label>
+                                         @* <span asp-validation-for="Numbers" class="text-danger"></span>  *@
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control border-0" id="number" placeholder="Şəkil">
-                                        <label for="number">Nömrə 2</label>
-                                        @* <span asp-validation-for="PhotoUrl" class="text-danger"></span> *@
+                                        <input type="text" class="form-control border-0" asp-for="GurdianNumber2" placeholder="Şəkil">
+                                        <label asp-for="GurdianNumber2">Nömrə 2</label>
+                                        @* <span asp-validation-for="Numbers" class="text-danger"></span> *@
+
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control border-0" asp-for="Message" style="height: 100px"></textarea>
+                                        <label asp-for="Message">Mesaj</label>
+                                        <span asp-validation-for="Message" class="text-danger"></span>
 
                                     </div>
                                 </div>

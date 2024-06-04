@@ -56,15 +56,15 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Səhifələr</a>
                         <div class="dropdown-menu rounded-0 rounded-bottom border-0 shadow-sm m-0">
-                            <a href="team.html" class="dropdown-item">Müəllimlər</a>
+                            <a asp-action="Index" asp-controller="Teacher" class="dropdown-item">Müəllimlər</a>
                             <a asp-action="Index" asp-controller="TeacherCandidate" class="dropdown-item">Komandamıza qoşul</a>
                             <a asp-action="Index" asp-controller="Appointment" class="dropdown-item">Qeydiyyat</a>
-                            <a href="testimonial.html" class="dropdown-item">Rəylər</a>
+                            <a asp-action="Index" asp-controller="Testimonial" class="dropdown-item">Rəylər</a>
                         </div>
                     </div>
-                    <a href="contact.html" class="nav-item nav-link">Əlaqə</a>
+                    <a asp-action="Index" asp-controller="Contact" class="nav-item nav-link">Əlaqə</a>
                 </div>
-                <a href="" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">Join Us<i class="fa fa-arrow-right ms-3"></i></a>
+                <a asp-action="Index" asp-controller="Appointment" class="btn btn-primary rounded-pill px-3 d-none d-lg-block">Join Us<i class="fa fa-arrow-right ms-3"></i></a>
             </div>
         </nav>
         <!-- Navbar End -->

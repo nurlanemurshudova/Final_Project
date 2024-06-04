@@ -15,7 +15,6 @@ namespace KiderProjectWeb.Controllers
         private readonly ISchoolClassService _schoolClassService;
         private readonly ITeacherService _teacherService;
         private readonly ISchoolClassTeacherService _classTeacherService;
-        private readonly IAppointmentService _appointmentService;
 
         public HomeController(IAboutService aboutService,
             ITestimonialService testimonialService,
@@ -33,7 +32,6 @@ namespace KiderProjectWeb.Controllers
             _schoolClassService = schoolClassService;
             _teacherService = teacherService;
             _classTeacherService = classTeacherService;
-            _appointmentService = appointmentService;
         }
         public IActionResult Index()
         {

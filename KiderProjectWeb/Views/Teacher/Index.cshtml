@@ -1,0 +1,46 @@
+﻿@model TeacherViewModel
+<!-- Page Header End -->
+<div class="container-xxl py-5 page-header position-relative mb-5">
+    <div class="container py-5">
+        <h1 class="display-2 text-white animated slideInDown mb-4">Müəllimlər</h1>
+        <nav aria-label="breadcrumb animated slideInDown">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Ana səhifə</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Müəllimlər</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+<!-- Team Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+            <h1 class="mb-3">Popular Teachers</h1>
+            <p>
+                Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit
+                eirmod sit. Ipsum diam justo sed rebum vero dolor duo.
+            </p>
+        </div>
+        <div class="row g-4">
+            @foreach (var item in Model.Teachers)
+            {
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item position-relative">
+                        <img class="img-fluid rounded-circle w-75" src="@item.PhotoUrl" alt="">
+                        <div class="team-text">
+                            <h3>@item.Name @item.Surname</h3>
+                            <p>@item.PositionName</p>
+                            <div class="d-flex align-items-center">
+                                <a class="btn btn-square btn-primary mx-1" href="@item.FacebookUrl"><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-square btn-primary  mx-1" href="@item.TwitterUrl"><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-square btn-primary  mx-1" href="@item.InstagramUrl"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Team End -->
