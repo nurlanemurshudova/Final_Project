@@ -48,7 +48,7 @@
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                     <div class="h-100 d-flex flex-column justify-content-center p-5">
                         <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
-                        <form asp-action="Index" method="post">
+                        <form asp-action="Index" method="post" id="contactForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="row g-3">
                                 <div class="col-sm-6">
@@ -101,7 +101,77 @@
 <!-- Contact End -->
 
 
+
 <script>
+    $(document).ready(function () {
+        $('#contactForm').validate({
+            rules: {
+                Name: {
+                    required: true,
+                    minlength: 2
+                },
+                Email: {
+                    required: true,
+                    email: true
+                },
+                PhoneNumber: {
+                    required: true,
+                    digits: true
+                },
+                Title: {
+                    required: true,
+                    minlength: 2
+                },
+                Message: {
+                    required: true,
+                    minlength: 10
+                }
+            },
+            messages: {
+                Name: {
+                    required: "Ad yazılmalıdır",
+                    minlength: "Ad ən az 2 simvol olmalıdır"
+                },
+                Email: {
+                    required: "E-poçt ünvanı yazılmalıdır",
+                    email: "Doğru e-poçt ünvanı daxil edin"
+                },
+                PhoneNumber: {
+                    required: "Telefon nömrəsi yazılmalıdır",
+                    digits: "Sadəcə nömrə daxil edin"
+                },
+                Title: {
+                    required: "Mövzu yazılmalıdır",
+                    minlength: "Mövzu ən az 2 simvol olmalıdır"
+                },
+                Message: {
+                    required: "Mesaj yazılmalıdır",
+                    minlength: "Mesaj ən az 10 simvol olmalıdır"
+                }
+            },
+            errorElement: "span",
+            errorPlacement: function (error, element) {
+                error.addClass("text-danger");
+                error.insertAfter(element);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass("is-invalid").removeClass("is-valid");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).addClass("is-valid").removeClass("is-invalid");
+            }
+        });
+
+        var message = '@Html.Raw(TempData["SuccessMessage"] != null ? TempData["SuccessMessage"].ToString() : "")';
+        if (message.trim() !== '') {
+            alert(message);
+        }
+    });
+</script>
+
+
+
+@* <script>
     window.onload = function () {
         var message = '@Html.Raw(TempData["SuccessMessage"] != null ? TempData["SuccessMessage"].ToString() : "")';
         if (message.trim() !== '') {
@@ -109,3 +179,5 @@
         }
     };
 </script>
+ *@
+

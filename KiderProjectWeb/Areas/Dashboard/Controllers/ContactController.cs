@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,12 +32,18 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(ContactCreateDto contact)
         {
-            var result = _contactService.Add(contact, out Dictionary<string, string> propertyNames);
+            var result = _contactService.Add(contact);
             if (!result.IsSuccess)
             {
-                //ModelState.Clear();
-                //ModelState.AddModelError("", result.Message);
-                AddModelError(propertyNames);
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
                 return View(contact);
             }
             return RedirectToAction("Index");
@@ -52,14 +60,20 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(ContactUpdateDto contact)
         {
-            var result = _contactService.Update(contact, out Dictionary<string, string> propertyNames);
+            var result = _contactService.Update(contact);
 
             if (!result.IsSuccess)
             {
-                //ModelState.Clear();
-                //ModelState.AddModelError("", result.Message);
-                AddModelError(propertyNames);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                return View(contact);
             }
             return RedirectToAction("Index");
         }

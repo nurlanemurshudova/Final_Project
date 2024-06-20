@@ -16,34 +16,61 @@ namespace Business.Concrete
     public class AppointmentManager : IAppointmentService
     {
         private readonly IAppointmentDal _appointmentDal;
-        private readonly IGurdianNumberDal _numberDal;
-        public AppointmentManager(IAppointmentDal appointmentDal, IGurdianNumberDal numberDal)
+       
+        public AppointmentManager(IAppointmentDal appointmentDal)
         {
             _appointmentDal = appointmentDal;
-            _numberDal = numberDal;
         }
 
-        public IResult Add(AppointmentCreateDto entity, out Dictionary<string, string> propertyNames)
+        public IResult Add(AppointmentCreateDto entity)
         {
+            //var model = AppointmentCreateDto.ToAppointment(entity);
+            //var validator = ValidationTool.Validate(new AppointmentValidation(), model, out List<ValidationErrorModel> errors);
+
+            //if (!validator)
+            //{
+            //    propertyNames = new();
+            //    foreach (var item in errors)
+            //    {
+            //        propertyNames.Add(item.PropertyName, item.ErrorMessage);
+            //    }
+            //    return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+            //}
+            //propertyNames = null;
+            //_appointmentDal.Add(model);
+            //foreach (var gurdianNumber in model.GurdianNumbers)
+            //{
+            //    gurdianNumber.AppontmentId = model.Id;
+            //    _numberDal.Add(gurdianNumber);
+            //}
+            //return new SuccessResult(UIMessages.ADDED_MESSAGE);
+
             var model = AppointmentCreateDto.ToAppointment(entity);
             var validator = ValidationTool.Validate(new AppointmentValidation(), model, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                propertyNames = new();
-                foreach (var item in errors)
+                //var errorMessage = string.Join(Environment.NewLine, errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}"));
+                //return new ErrorResult(errorMessage);
+
+
+                var error = errors.Select(e => new ValidationErrorModel
                 {
-                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
-                }
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
+
+                //return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
-            propertyNames = null;
+
             _appointmentDal.Add(model);
-            foreach (var gurdianNumber in model.GurdianNumbers)
-            {
-                gurdianNumber.AppontmentId = model.Id;
-                _numberDal.Add(gurdianNumber);
-            }
+            //foreach (var gurdianNumber in model.GurdianNumbers)
+            //{
+            //    gurdianNumber.AppontmentId = model.Id;
+            //    _numberDal.Add(gurdianNumber);
+            //}
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
 
@@ -67,21 +94,29 @@ namespace Business.Concrete
             return new SuccessDataResult<Appointment>(_appointmentDal.GetById(id));
         }
 
-        public IResult Update(AppointmentUpdateDto entity, out Dictionary<string, string> propertyNames)
+        public IResult Update(AppointmentUpdateDto entity)
         {
             var model = AppointmentUpdateDto.ToAppointment(entity);
             var validator = ValidationTool.Validate(new AppointmentValidation(), model, out List<ValidationErrorModel> errors);
 
+
             if (!validator)
             {
-                propertyNames = new();
-                foreach (var item in errors)
+                //var errorMessage = string.Join(Environment.NewLine, errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}"));
+                //return new ErrorResult(errorMessage);
+
+
+                var error = errors.Select(e => new ValidationErrorModel
                 {
-                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
-                }
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
+
+                //return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
-            propertyNames = null;
+
             model.LastUpdateDate = DateTime.Now;
             _appointmentDal.Update(model);
 

@@ -19,7 +19,7 @@
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                     <div class="h-100 d-flex flex-column justify-content-center p-5">
                         <h1 class="mb-4">Uşaq qeydiyyatı</h1>
-                        <form asp-action="Index" method="post">
+                        <form asp-action="Index" method="post" id="appointmentForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="row g-3">
                                 <div class="col-sm-6">
@@ -55,16 +55,16 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control border-0" asp-for="GurdianNumber1" placeholder="Təvəllüd">
-                                        <label asp-for="GurdianNumber1">Nömrə 1</label>
-                                         @* <span asp-validation-for="Numbers" class="text-danger"></span>  *@
+                                        <input type="text" class="form-control border-0" asp-for="FirstPhoneNumber" placeholder="Əlaqə nömrəsi">
+                                        <label asp-for="FirstPhoneNumber">Nömrə 1</label>
+                                         <span asp-validation-for="FirstPhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control border-0" asp-for="GurdianNumber2" placeholder="Şəkil">
-                                        <label asp-for="GurdianNumber2">Nömrə 2</label>
-                                        @* <span asp-validation-for="Numbers" class="text-danger"></span> *@
+                                        <input type="text" class="form-control border-0" asp-for="SecondPhoneNumber" placeholder="Əlaqə nömrəsi">
+                                        <label asp-for="SecondPhoneNumber">Nömrə 2</label>
+                                        <span asp-validation-for="SecondPhoneNumber" class="text-danger"></span>
 
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" type="submit">Göndər</button>
+                                    <button value="@DefaultConstantValue.ADD_MESSAGE" class="btn btn-primary w-100 py-3" type="submit">Göndər</button>
                                 </div>
 
                             </div>
@@ -94,6 +94,92 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#appointmentForm').validate({
+            rules: {
+                GurdianName: {
+                    required: true,
+                    minlength: 2
+                },
+                GurdianEmail: {
+                    required: true,
+                    email: true
+                },
+                ChildName: {
+                    required: true,
+                    minlength: 2
+                },
+                ChildAge: {
+                    required: true,
+                    number: true,
+                    min: 1,
+                    max: 10
+                },
+                FirstPhoneNumber: {
+                    required: true,
+                    digits: true
+                },
+                SecondPhoneNumber: {
+                    required: true,
+                    digits: true
+                },
+                Message: {
+                    required: true,
+                    minlength: 10
+                }
+            },
+            messages: {
+                GurdianName: {
+                    required: "Valideyn adı yazılmalıdır",
+                    minlength: "Valideyn adı ən az 2 simvol olmalıdır"
+                },
+                GurdianEmail: {
+                    required: "Valideyn e-poçt ünvanı yazılmalıdır",
+                    email: "Doğru e-poçt ünvanı daxil edin"
+                },
+                ChildName: {
+                    required: "Uşağın adı yazılmalıdır",
+                    minlength: "Uşağın adı ən az 2 simvol olmalıdır"
+                },
+                ChildAge: {
+                    required: "Uşağın yaşı yazılmalıdır",
+                    number: "Doğru bir yaş daxil edin",
+                    min: "Yaş ən az 1 olmalıdır",
+                    max: "Yaş ən çox 10 olmalıdır"
+                },
+                FirstPhoneNumber: {
+                    required: "Nömrə yazılmalıdır",
+                    digits: "Sadəcə nömrə daxil edin"
+                },
+                SecondPhoneNumber: {
+                    required: "Nömrə yazılmalıdır",
+                    digits: "Sadəcə nömrə daxil edin"
+                },
+                Message: {
+                    required: "Mesaj yazılmalıdır",
+                    minlength: "Mesaj ən az 10 simvol olmalıdır"
+                }
+            },
+            errorElement: "span",
+            errorPlacement: function (error, element) {
+                error.addClass("text-danger");
+                error.insertAfter(element);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass("is-invalid").removeClass("is-valid");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).addClass("is-valid").removeClass("is-invalid");
+            }
+        });
+    });
+</script>
+
+
 
 <script>
     window.onload = function () {

@@ -8,5 +8,7 @@
         public string ChildName { get; set; }
         public byte ChildAge { get; set; }
         public string Message { get; set; }
+        public string FirstPhoneNumber { get; set; }
+        public string SecondPhoneNumber { get; set; }
     }
 }

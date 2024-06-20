@@ -23,7 +23,6 @@ namespace DataAccess.Context
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Facility> Facilities { get; set; }
-        public DbSet<GurdianNumber> GurdianNumbers { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<SchoolClass> SchoolClasses { get; set; }
         public DbSet<Slide> Slides { get; set; }

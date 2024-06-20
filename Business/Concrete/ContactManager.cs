@@ -20,44 +20,27 @@ namespace Business.Concrete
         {
             _contactDal = contactDal;
         }
-        public IResult Add(ContactCreateDto entity, out Dictionary<string, string> propertyNames)
+        public IResult Add(ContactCreateDto entity)
         {
             var model = ContactCreateDto.ToContact(entity);
             var validator = ValidationTool.Validate(new ContactValidation(), model, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                propertyNames = new();
-                foreach (var item in errors)
+                var error = errors.Select(e => new ValidationErrorModel
                 {
-                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
-                }
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
+
+                //return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
             }
-            propertyNames = null;
+
             _contactDal.Add(model);
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
-        //public IResult Add(ContactCreateDto entity)
-        //{
-        //    var model = ContactCreateDto.ToContact(entity);
-        //    var validator = _validator.Validate(model);
-
-        //    string errorMessage = " ";
-        //    foreach (var item in validator.Errors)
-        //    {
-        //        errorMessage = item.ErrorMessage;
-        //        //propertyNames += item.PropertyName;
-        //    }
-
-        //    if (!validator.IsValid)
-        //    {
-        //        return new ErrorResult(errorMessage);
-        //    }
-        //    _contactDal.Add(model);
-
-        //    return new SuccessResult(UIMessages.ADDED_MESSAGE);
-        //}
 
         public IResult Delete(int id)
         {
@@ -79,21 +62,22 @@ namespace Business.Concrete
             return new SuccessDataResult<Contact>(_contactDal.GetById(id));
         }
 
-        public IResult Update(ContactUpdateDto entity,out Dictionary<string, string> propertyNames)
+        public IResult Update(ContactUpdateDto entity)
         {
             var model = ContactUpdateDto.ToContact(entity);
             var validator = ValidationTool.Validate(new ContactValidation(), model, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                propertyNames = new();
-                foreach (var item in errors)
+                var error = errors.Select(e => new ValidationErrorModel
                 {
-                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
-                }
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            propertyNames = null;
+            
             model.LastUpdateDate = DateTime.Now;
             _contactDal.Update(model);
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);

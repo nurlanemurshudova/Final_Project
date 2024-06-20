@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Authorization;
@@ -30,18 +31,22 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(AppointmentCreateDto appointment)
         {
-            var result = _appointmentService.Add(appointment, out Dictionary<string, string> propertyNames);
+            var result = _appointmentService.Add(appointment);
             if (!result.IsSuccess)
             {
-                //ModelState.Clear();
-                //ModelState.AddModelError("",result.Message);
-                AddModelError(propertyNames);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                return View(appointment);
             }
 
             return RedirectToAction("Index");
-
-
         }
 
         [HttpGet]
@@ -55,14 +60,20 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(AppointmentUpdateDto appointment)
         {
-            var result = _appointmentService.Update(appointment, out Dictionary<string, string> propertyNames);
+            var result = _appointmentService.Update(appointment);
 
             if (!result.IsSuccess)
             {
-                //ModelState.Clear();
-                //ModelState.AddModelError("", result.Message);
-                AddModelError(propertyNames);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                return View(appointment);
             }
             return RedirectToAction("Index");
 

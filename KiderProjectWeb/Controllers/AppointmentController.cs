@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,16 +21,22 @@ namespace KiderProjectWeb.Controllers
         [HttpPost]
         public IActionResult Index(AppointmentCreateDto appointment)
         {
-            var result = _appointmentService.Add(appointment, out Dictionary<string, string> propertyNames);
+
+            var result = _appointmentService.Add(appointment);
             if (!result.IsSuccess)
             {
-                ModelState.Clear();
-                foreach (var item in propertyNames)
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
                 {
-                    ModelState.AddModelError(item.Key, item.Value);
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
                 }
                 return View(appointment);
             }
+
             TempData["SuccessMessage"] = "Məlumat uğurla göndərildi!";
             return RedirectToAction("Index");
 

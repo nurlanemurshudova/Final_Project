@@ -20,6 +20,17 @@ namespace Business.Validations
                 .EmailAddress()
                 .WithMessage(UIMessages.GetEmailErrorMessage());
 
+            RuleFor(x => x.FirstPhoneNumber)
+                .NotEmpty()
+                .WithMessage(UIMessages.GetRequiredMessage("Nömrə"))
+                .MaximumLength(13)
+                .WithMessage(UIMessages.GetMaxLengthMessage(13, "Nömrə"));
+
+            RuleFor(x => x.SecondPhoneNumber)
+                .NotEmpty()
+                .WithMessage(UIMessages.GetRequiredMessage("Nömrə"))
+                .MaximumLength(13)
+                .WithMessage(UIMessages.GetMaxLengthMessage(13, "Nömrə"));
             RuleFor(x => x.ChildName)
                 .NotEmpty()
                 .WithMessage(UIMessages.GetRequiredMessage("Uşağın adı"))

@@ -11,7 +11,7 @@ namespace Core.Extension
             foreach (var error in errors)
             {
                 sb.Append("\n"+error.ErrorMessage);
-                //sb.Append(error.PropertyName);
+                sb.Append(error.PropertyName);
                 sb.Append(Environment.NewLine);
             }
             return sb.ToString();

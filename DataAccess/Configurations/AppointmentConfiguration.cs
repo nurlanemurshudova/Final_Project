@@ -33,6 +33,14 @@ namespace DataAccess.Configurations
                 .HasMaxLength(2000)
                 .IsRequired();
 
+            builder.Property(x=>x.FirstPhoneNumber)
+                .HasMaxLength(50)
+                .IsRequired();
+            
+            builder.Property(x=>x.SecondPhoneNumber)
+                .HasMaxLength(50)
+                .IsRequired();
+
             builder.HasIndex(x => x.GurdianEmail);
 
         }

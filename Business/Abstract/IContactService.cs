@@ -6,9 +6,8 @@ namespace Business.Abstract
 {
     public interface IContactService
     {
-        //IResult Add(ContactCreateDto entity);
-        IResult Add(ContactCreateDto entity, out Dictionary<string, string> propertyNames);
-        IResult Update(ContactUpdateDto entity,out Dictionary<string, string> propertyNames);
+        IResult Add(ContactCreateDto entity);
+        IResult Update(ContactUpdateDto entity);
         IResult Delete(int id);
         IDataResult<List<Contact>> GetAll();
         IDataResult<Contact> GetById(int id);

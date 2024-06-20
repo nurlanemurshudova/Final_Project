@@ -62,10 +62,6 @@ namespace KiderProjectWeb
             builder.Services.AddScoped<IFacilityService,FacilityManager>();
             builder.Services.AddScoped<IValidator<Facility>, FacilityValidation>();
 
-            builder.Services.AddScoped<IGurdianNumberDal, GurdianNumberDal>();
-            builder.Services.AddScoped<IGurdianNumberService, GurdianNumberManager>();
-            builder.Services.AddScoped<IValidator<GurdianNumber>, GurdianNumberValidation>();
-
             builder.Services.AddScoped<IPositionDal, PositionDal>();
             builder.Services.AddScoped<IPositionService, PositionManager>();
             builder.Services.AddScoped<IValidator<Position>, PositionValidation>();

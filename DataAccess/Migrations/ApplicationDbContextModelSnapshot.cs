@@ -71,6 +71,11 @@ namespace DataAccess.Migrations
                     b.Property<int>("Deleted")
                         .HasColumnType("int");
 
+                    b.Property<string>("FirstPhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("GurdianEmail")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -88,6 +93,11 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("SecondPhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -185,40 +195,6 @@ namespace DataAccess.Migrations
                         .HasDatabaseName("idx_Name_Deleted");
 
                     b.ToTable("Facilities", (string)null);
-                });
-
-            modelBuilder.Entity("Entities.Concrete.TableModels.GurdianNumber", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 10000L);
-
-                    b.Property<int>("AppontmentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Deleted")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastUpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppontmentId");
-
-                    b.HasIndex("Number");
-
-                    b.ToTable("GurdianNumbers", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Concrete.TableModels.Membership.ApplicationRole", b =>
@@ -771,17 +747,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Testimonials", (string)null);
                 });
 
-            modelBuilder.Entity("Entities.Concrete.TableModels.GurdianNumber", b =>
-                {
-                    b.HasOne("Entities.Concrete.TableModels.Appointment", "Appointment")
-                        .WithMany("GurdianNumbers")
-                        .HasForeignKey("AppontmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Appointment");
-                });
-
             modelBuilder.Entity("Entities.Concrete.TableModels.Membership.ApplicationRoleClaim", b =>
                 {
                     b.HasOne("Entities.Concrete.TableModels.Membership.ApplicationRole", null)
@@ -861,11 +826,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Position");
-                });
-
-            modelBuilder.Entity("Entities.Concrete.TableModels.Appointment", b =>
-                {
-                    b.Navigation("GurdianNumbers");
                 });
 
             modelBuilder.Entity("Entities.Concrete.TableModels.Position", b =>
