@@ -7,20 +7,19 @@ namespace KiderProjectWebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContactController : ControllerBase
+    public class PositionController : ControllerBase
     {
-        private readonly IContactService _contactService;
+        private readonly IPositionService _positionService;
 
-        public ContactController(IContactService contactService)
+        public PositionController(IPositionService positionService)
         {
-            _contactService = contactService;
+            _positionService = positionService;
         }
 
-
-        [HttpGet("GetContacts")]
-        public IActionResult GetContacts()
+        [HttpGet("GetPositions")]
+        public IActionResult GetPositions()
         {
-            var result = _contactService.GetAll();
+            var result = _positionService.GetAll();
 
             if (result.IsSuccess)
                 return Ok(result);
@@ -28,10 +27,10 @@ namespace KiderProjectWebApi.Controllers
             return BadRequest();
         }
 
-        [HttpPost("AddContact")]
-        public IActionResult AddContact(ContactCreateDto dto)
+        [HttpPost("AddPosition")]
+        public IActionResult AddPosition(PositionCreateDto dto)
         {
-            var result = _contactService.Add(dto);
+            var result = _positionService.Add(dto);
 
             if (result.IsSuccess)
                 return Ok(result);
@@ -39,10 +38,10 @@ namespace KiderProjectWebApi.Controllers
             return BadRequest("Göndərilən məlumat doğru deyil");
         }
 
-        [HttpPut("UpdateContact")]
-        public IActionResult UpdateContact(ContactUpdateDto dto)
+        [HttpPut("UpdatePosition")]
+        public IActionResult UpdatePosition(PositionUpdateDto dto)
         {
-            var result = _contactService.Update(dto);
+            var result = _positionService.Update(dto);
 
             if (result.IsSuccess)
                 return Ok(result);
@@ -50,10 +49,10 @@ namespace KiderProjectWebApi.Controllers
             return BadRequest("Məlumat yenilənə bilmədi");
         }
 
-        [HttpDelete("DeleteContact/{id}")]
-        public IActionResult DeleteContact(int id)
+        [HttpDelete("DeletePosition/{id}")]
+        public IActionResult DeletePosition(int id)
         {
-            var result = _contactService.Delete(id);
+            var result = _positionService.Delete(id);
 
             if (result.IsSuccess)
                 return Ok(result);

@@ -20,22 +20,22 @@ namespace Business.Concrete
         {
             _facilityDal = facilityDal;
         }
-        public IResult Add(FacilityCreateDto entity,out Dictionary<string, string> propertyNames)
+        public IResult Add(FacilityCreateDto entity)
         {
             var model = FacilityCreateDto.ToFacility(entity);
             var validator = ValidationTool.Validate(new FacilityValidation(), model, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                propertyNames = new();
-                foreach (var item in errors)
+                var error = errors.Select(e => new ValidationErrorModel
                 {
-                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
-                }
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
             _facilityDal.Add(model);
-            propertyNames = null;
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
 
         }
@@ -61,21 +61,21 @@ namespace Business.Concrete
             return new SuccessDataResult<Facility>(_facilityDal.GetById(id));
         }
 
-        public IResult Update(FacilityUpdateDto entity, out Dictionary<string, string> propertyNames)
+        public IResult Update(FacilityUpdateDto entity)
         {
             var model = FacilityUpdateDto.ToFacility(entity);
             var validator = ValidationTool.Validate(new FacilityValidation(), model, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                propertyNames = new();
-                foreach (var item in errors)
+                var error = errors.Select(e => new ValidationErrorModel
                 {
-                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
-                }
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            propertyNames = null;
             model.LastUpdateDate = DateTime.Now;
             _facilityDal.Update(model);
 

@@ -47,8 +47,17 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-                ModelState.AddModelError("", result.Message);
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
             }
+            ModelState.AddModelError("", "Sekil elave et");
             ViewData["Teachers"] = _teacherService.GetAll().Data;
             return View(schoolClass);
         }
@@ -82,9 +91,16 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
             
             if (!result.IsSuccess)
             {
-                ModelState.Clear();
-                ModelState.AddModelError("", result.Message);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                return View(dto);
             }
 
             ViewData["Teachers"] = _teacherService.GetAll().Data;

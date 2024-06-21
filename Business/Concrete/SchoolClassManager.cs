@@ -23,14 +23,27 @@ namespace Business.Concrete
 
         public IResult Add(SchoolClassCreateDto entity, IFormFile photoUrl, string webRootPath)
         {
-            //classDal.Add(entity);
+            //if (photoUrl == null)
+            //{
+            //    var photoError = new List<ValidationErrorModel>
+            //    {
+            //        new ValidationErrorModel { PropertyName = "PhotoUrl", ErrorMessage = "Şəkil əlavə edin." }
+            //    };
+            //    return new ErrorResult(photoError);
+            //}
             var model = SchoolClassCreateDto.ToSchoolClass(entity);
             model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
             var validator = ValidationTool.Validate(new SchoolClassValidation(), model, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                var error = errors.Select(e => new ValidationErrorModel
+                {
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
             _classDal.Add(model);
             _classDal.AddWithTeacher(model, entity);
@@ -53,7 +66,13 @@ namespace Business.Concrete
             var validator = ValidationTool.Validate(new SchoolClassValidation(), model, out List<ValidationErrorModel> errors);
             if (!validator)
             {
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                var error = errors.Select(e => new ValidationErrorModel
+                {
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
 
             model.LastUpdateDate = DateTime.Now;

@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Authorization;
@@ -32,10 +33,18 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Create(FacilityCreateDto facility)
         {
-            var result = _facilityService.Add(facility, out Dictionary<string, string> properties);
+            var result = _facilityService.Add(facility);
             if (!result.IsSuccess)
             {
-                AddModelError(properties);
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
                 return View(facility);
             }
             return RedirectToAction("Index");
@@ -52,12 +61,20 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         [HttpPost]
         public IActionResult Edit(FacilityUpdateDto facility)
         {
-            var result = _facilityService.Update(facility, out Dictionary<string, string> properties);
+            var result = _facilityService.Update(facility);
 
             if (!result.IsSuccess)
             {
-                AddModelError(properties);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                return View(facility);
             }
             return RedirectToAction("Index");
         }
