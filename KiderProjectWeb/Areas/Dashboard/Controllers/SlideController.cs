@@ -1,6 +1,9 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.TableModels;
+using Entities.Concrete.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,19 +34,23 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(SlideCreateDto slide, IFormFile photoUrl)
+        public IActionResult Create(SlideCreateDto slide)
         {
-            if (photoUrl != null)
+            var result = _slideService.Add(slide, _env.WebRootPath);
+            if (!result.IsSuccess)
             {
-                var result = _slideService.Add(slide, photoUrl, _env.WebRootPath);
-
-                if (result.IsSuccess)
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
                 {
-                    return RedirectToAction("Index");
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
                 }
-                ModelState.AddModelError("", result.Message);
+                return View(slide);
             }
-            return View(slide);
+            return RedirectToAction("Index");
 
         }
 
@@ -56,17 +63,23 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(SlideUpdateDto slide, IFormFile photoUrl)
+        public IActionResult Edit(SlideUpdateDto slide)
         {
-            var result = _slideService.Update(slide, photoUrl, _env.WebRootPath);
+            var result = _slideService.Update(slide, _env.WebRootPath);
 
             if (!result.IsSuccess)
             {
-                ModelState.Clear();
-                ModelState.AddModelError("", result.Message);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                return View(slide);
             }
-
             return RedirectToAction("Index");
         }
 

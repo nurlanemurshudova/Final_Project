@@ -20,17 +20,33 @@ namespace Business.Concrete
         {
             _testmonialDal = testmonialDal;
         }
-        public IResult Add(TestimonialCreateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Add(TestimonialCreateDto entity, string webRootPath)
         {
-            var model = TestimonialCreateDto.ToTestimonial(entity);
-            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            var validator = ValidationTool.Validate(new TestimonialValidation(), model, out List<ValidationErrorModel> errors);
+            string photo = null;
 
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
+            {
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
+            }
+            Testimonial testimonial = new Testimonial()
+            {
+                FirstName = entity.FirstName,
+                LastName = entity.LastName,
+                Feedback = entity.Feedback,
+                PhotoUrl = photo,
+            };
+            var validator = ValidationTool.Validate(new TestimonialValidation(), testimonial, out List<ValidationErrorModel> errors);
             if (!validator)
             {
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                var error = errors.Select(e => new ValidationErrorModel
+                {
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            _testmonialDal.Add(model);
+            _testmonialDal.Add(testimonial);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
@@ -55,27 +71,38 @@ namespace Business.Concrete
             return new SuccessDataResult<Testimonial>(_testmonialDal.GetById(id));
         }
 
-        public IResult Update(TestimonialUpdateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Update(TestimonialUpdateDto entity,  string webRootPath)
         {
-            
-            var model = TestimonialUpdateDto.ToTestimonial(entity);
             var existData = GetById(entity.Id).Data;
-            if (photoUrl == null)
-            {
-                model.PhotoUrl = existData.PhotoUrl;
-            }
-            else
-            {
-                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            }
-            var validator = ValidationTool.Validate(new TestimonialValidation(), model, out List<ValidationErrorModel> errors);
+            string photo = existData?.PhotoUrl;
 
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
+            {
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
+            }
+
+            Testimonial testimonial = new Testimonial()
+            {
+                Id = entity.Id,
+                FirstName = entity.FirstName,
+                LastName = entity.LastName,
+                Feedback = entity.Feedback,
+                PhotoUrl = photo,
+            };
+
+            var validator = ValidationTool.Validate(new TestimonialValidation(), testimonial, out List<ValidationErrorModel> errors);
             if (!validator)
             {
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                var error = errors.Select(e => new ValidationErrorModel
+                {
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            model.LastUpdateDate = DateTime.Now;
-            _testmonialDal.Update(model);
+            testimonial.LastUpdateDate = DateTime.Now;
+            _testmonialDal.Update(testimonial);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }

@@ -1,9 +1,11 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
@@ -35,20 +37,25 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(TeacherCreateDto teacher, IFormFile photoUrl)
+        public IActionResult Create(TeacherCreateDto teacher)
         {
 
-            if (photoUrl != null)
+            var result = _teacherService.Add(teacher, _env.WebRootPath);
+            if (!result.IsSuccess)
             {
-                var result = _teacherService.Add(teacher, photoUrl, _env.WebRootPath);
-                if (result.IsSuccess)
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
                 {
-                    return RedirectToAction("Index");
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
                 }
-                ModelState.AddModelError("", result.Message);
+                ViewData["Positions"] = _positionService.GetAll().Data;
+                return View(teacher);
             }
-            ViewData["Positions"] = _positionService.GetAll().Data;
-            return View(teacher);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -62,18 +69,23 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(TeacherUpdateDto teacher, IFormFile photoUrl)
+        public IActionResult Edit(TeacherUpdateDto teacher)
         {
-            var result = _teacherService.Update(teacher, photoUrl, _env.WebRootPath);
-
-
+            var result = _teacherService.Update(teacher, _env.WebRootPath);
             if (!result.IsSuccess)
             {
-                ModelState.Clear();
-                ModelState.AddModelError("", result.Message);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                ViewData["Positions"] = _positionService.GetAll().Data;
+                return View(teacher);
             }
-            ViewData["Positions"] = _positionService.GetAll().Data;
             return RedirectToAction("Index");
         }
 

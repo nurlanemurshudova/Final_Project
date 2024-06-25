@@ -13,8 +13,8 @@
                             <div class="col-10 col-lg-8">
                                 <h1 class="display-2 text-white animated slideInDown mb-4">@item.Title</h1>
                                 <p class="fs-5 fw-medium text-white mb-4 pb-2">@item.Description</p>
-                                <a href="" class="btn btn-primary rounded-pill py-sm-3 px-sm-5 me-3 animated slideInLeft">Learn More</a>
-                                <a href="" class="btn btn-dark rounded-pill py-sm-3 px-sm-5 animated slideInRight">Our Classes</a>
+                                <a href="" class="btn btn-primary rounded-pill py-sm-3 px-sm-5 me-3 animated slideInLeft">Daha ətraflı</a>
+                                <a href="" class="btn btn-dark rounded-pill py-sm-3 px-sm-5 animated slideInRight">Siniflər</a>
                             </div>
                         </div>
                     </div>
@@ -28,8 +28,8 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">School Facilities</h1>
-            <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+            <h1 class="mb-3">Bağça üstünlükləri</h1>
+            <p>Bağçamızın təqdim etdiyi imkanlar uşaqların hərtərəfli inkişafını təmin etmək məqsədi ilə diqqətlə seçilmişdir. </p>
         </div>
         <div class="row g-4">
             @foreach (var item in Model.Facilities)
@@ -57,14 +57,14 @@
     <div class="container">
         <div class="row g-5 align-items-center">
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                <h1 class="mb-4">Learn More About Our Work And Our Cultural Activities</h1>
+                <h1 class="mb-4">Bağçamız Haqqında Ətraflı Məlumat əldə edin</h1>
                 @foreach (var item in Model.Abouts)
                 {
                     <p>@item.Description</p>
                 }
                 <div class="row g-4 align-items-center">
                     <div class="col-sm-6">
-                        <a class="btn btn-primary rounded-pill py-3 px-5" href="">Read More</a>
+                        <a class="btn btn-primary rounded-pill py-3 px-5" href="">Daha ətraflı</a>
                     </div>
                     <div class="col-sm-6">
                         <div class="d-flex align-items-center">
@@ -106,12 +106,12 @@
                 </div>
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                     <div class="h-100 d-flex flex-column justify-content-center p-5">
-                        <h1 class="mb-4">Become A Teacher</h1>
+                        <h1 class="mb-4">Komandamıza qoşul</h1>
                         <p class="mb-4">
-                            Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos.
-                            Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet
+                            Bağçamızın yüksək keyfiyyətli təhsil və qayğı göstərən komandamıza yeni üzvlər axtarırıq!
+                            Əgər siz də uşaqların inkişafına, təliminə və onların gələcəyinə töhfə vermək istəyirsinizsə, sizi komandamıza qoşulmağa dəvət edirik.
                         </p>
-                        <a class="btn btn-primary py-3 px-5" asp-action="Index" asp-controller="TeacherCandidate">Get Started Now<i class="fa fa-arrow-right ms-2"></i></a>
+                        <a class="btn btn-primary py-3 px-5" asp-action="Index" asp-controller="TeacherCandidate">İndi qeydiyyatdan keç<i class="fa fa-arrow-right ms-2"></i></a>
                     </div>
                 </div>
             </div>
@@ -123,8 +123,8 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">School Classes</h1>
-            <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+            <h1 class="mb-3">Siniflər</h1>
+            <p>Bağçamızın sinifləri, hər bir uşağın fərdi inkişafına və maraqlarına uyğun olaraq tərtib edilmişdir. </p>
         </div>
         <div class="row g-4">
             @foreach (var item in Model.SchoolClasses)
@@ -166,20 +166,20 @@
                                 <div class="row g-1">
                                     <div class="col-4">
                                         <div class="border-top border-3 border-primary pt-2">
-                                            <h6 class="text-primary mb-1">Age:</h6>
+                                            <h6 class="text-primary mb-1">Yaş:</h6>
                                             <small>@item.ChildAge Years</small>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="border-top border-3 border-success pt-2">
-                                            <h6 class="text-success mb-1">Time:</h6>
-                                            <small>@item.Time AM</small>
+                                            <h6 class="text-success mb-1">Dərs saatı:</h6>
+                                            <small>@item.Time</small>
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="border-top border-3 border-warning pt-2">
-                                            <h6 class="text-warning mb-1">Capacity:</h6>
-                                            <small>@item.Capacity Kids</small>
+                                            <h6 class="text-warning mb-1">Uşaq sayı:</h6>
+                                            <small>@item.Capacity uşaq</small>
                                         </div>
                                     </div>
                                 </div>
@@ -201,12 +201,12 @@
             <div class="row g-0">
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                     <div class="h-100 d-flex flex-column justify-content-center p-5">
-                        <h1 class="mb-4">Make Appointment</h1>
+                        <h1 class="mb-4">Qeydiyyat</h1>
                         <p class="mb-4">
-                            Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos.
-                            Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet
+                            Bağçamıza xoş gəlmisiniz! Uşaqlarınızın xoşbəxt, təhlükəsiz və öyrədici bir mühitdə böyüməsi bizim üçün çox önəmlidir.
+                            Bağçamızda uşaqlarınızın inkişafını dəstəkləmək və onların potensialını kəşf etmək üçün hər cür imkanlar mövcuddur.
                         </p>
-                        <a class="btn btn-primary py-3 px-5" asp-action="Index" asp-controller="Appointment">Get Started Now<i class="fa fa-arrow-right ms-2"></i></a>
+                        <a class="btn btn-primary py-3 px-5" asp-action="Index" asp-controller="Appointment">İndi qeydiyyatdan keç<i class="fa fa-arrow-right ms-2"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
@@ -223,10 +223,9 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">Popular Teachers</h1>
+            <h1 class="mb-3">Müəllimlər</h1>
             <p>
-                Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit
-                eirmod sit. Ipsum diam justo sed rebum vero dolor duo.
+                Bağçamızın uğurunda və uşaqlarımızın təhsili və tərbiyəsində ən önəmli rolu oynayan peşəkar və təcrübəli müəllim heyətimizlə tanış olun.
             </p>
         </div>
         <div class="row g-4">
@@ -258,8 +257,7 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">Our Clients Say!</h1>
-            <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+            <h1 class="mb-3">Rəylər</h1>
         </div>
         <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
             @foreach (var item in Model.Testimonials)

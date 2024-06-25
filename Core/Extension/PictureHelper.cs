@@ -7,7 +7,7 @@ namespace Core.Extension
         public static string UploadImage(this IFormFile formFile , string webRootPath)
         {
             var path = "/Images/" + Guid.NewGuid().ToString() + formFile.FileName;
-            using(FileStream fileStream = new FileStream(webRootPath + path, FileMode.Create))
+            using (FileStream fileStream = new FileStream(webRootPath + path, FileMode.Create))
             {
                 formFile.CopyTo(fileStream);
             }

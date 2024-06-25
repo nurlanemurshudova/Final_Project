@@ -1,4 +1,5 @@
 ﻿using Entities.Concrete.TableModels;
+using Microsoft.AspNetCore.Http;
 namespace Entities.Concrete.Dtos
 {
     public class TeacherCandidateUpdateDto
@@ -11,24 +12,7 @@ namespace Entities.Concrete.Dtos
         public DateTime BirthDate { get; set; }
         public string Experience { get; set; }
         public string Education { get; set; }
-        public string PhotoUrl { get; set; }
+        public IFormFile PhotoUrl { get; set; }
         public bool IsContacted { get; set; }
-        public static TeacherCandidate ToTeacherCandidate(TeacherCandidateUpdateDto dto)
-        {
-            TeacherCandidate teacherCandidate = new TeacherCandidate()
-            {
-                Id  = dto.Id,
-                Name = dto.Name,
-                Surname = dto.Surname,
-                Email = dto.Email,
-                PhoneNumber = dto.PhoneNumber,
-                BirthDate = dto.BirthDate,
-                Experience = dto.Experience,
-                Education = dto.Education,
-                PhotoUrl = dto.PhotoUrl,
-                IsContacted = dto.IsContacted,
-            };
-            return teacherCandidate;
-        }
     }
 }

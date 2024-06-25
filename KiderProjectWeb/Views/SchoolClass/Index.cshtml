@@ -16,8 +16,8 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">School Classes</h1>
-            <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+            <h1 class="mb-3">Siniflər</h1>
+            <p>Bağçamızın sinifləri, hər bir uşağın fərdi inkişafına və maraqlarına uyğun olaraq tərtib edilmişdir. </p>
         </div>
         <div class="row g-4">
             @foreach (var item in Model.SchoolClasses)
@@ -58,20 +58,20 @@
                             <div class="row g-1">
                                 <div class="col-4">
                                     <div class="border-top border-3 border-primary pt-2">
-                                        <h6 class="text-primary mb-1">Age:</h6>
+                                        <h6 class="text-primary mb-1">Yaş:</h6>
                                         <small>@item.ChildAge Years</small>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="border-top border-3 border-success pt-2">
-                                        <h6 class="text-success mb-1">Time:</h6>
-                                        <small>@item.Time AM</small>
+                                        <h6 class="text-success mb-1">Dərs saatı:</h6>
+                                        <small>@item.Time</small>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="border-top border-3 border-warning pt-2">
-                                        <h6 class="text-warning mb-1">Capacity:</h6>
-                                        <small>@item.Capacity Kids</small>
+                                        <h6 class="text-warning mb-1">Uşaq sayı:</h6>
+                                        <small>@item.Capacity uşaq</small>
                                     </div>
                                 </div>
                             </div>
@@ -90,12 +90,12 @@
             <div class="row g-0">
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                     <div class="h-100 d-flex flex-column justify-content-center p-5">
-                        <h1 class="mb-4">Make Appointment</h1>
+                        <h1 class="mb-4">Qeydiyyat</h1>
                         <p class="mb-4">
-                            Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos.
-                            Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet
+                            Bağçamıza xoş gəlmisiniz! Uşaqlarınızın xoşbəxt, təhlükəsiz və öyrədici bir mühitdə böyüməsi bizim üçün çox önəmlidir.
+                            Bağçamızda uşaqlarınızın inkişafını dəstəkləmək və onların potensialını kəşf etmək üçün hər cür imkanlar mövcuddur.
                         </p>
-                        <a class="btn btn-primary py-3 px-5" asp-action="Index" asp-controller="Appointment">Get Started Now<i class="fa fa-arrow-right ms-2"></i></a>
+                        <a class="btn btn-primary py-3 px-5" asp-action="Index" asp-controller="Appointment">İndi qeydiyyatdan keç<i class="fa fa-arrow-right ms-2"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
@@ -112,8 +112,7 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">Our Clients Say!</h1>
-            <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
+            <h1 class="mb-3">Rəylər</h1>
         </div>
         <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
             @foreach (var item in Model.Testimonials)

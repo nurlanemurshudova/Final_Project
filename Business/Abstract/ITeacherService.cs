@@ -8,8 +8,8 @@ namespace Business.Abstract
 {
     public interface ITeacherService
     {
-        IResult Add(TeacherCreateDto entity, IFormFile photoUrl, string webRootPath);
-        IResult Update(TeacherUpdateDto entity, IFormFile photoUrl, string webRootPath);
+        IResult Add(TeacherCreateDto entity, string webRootPath);
+        IResult Update(TeacherUpdateDto entity, string webRootPath);
         IResult Delete(int id);
         IDataResult<List<Teacher>> GetAll();
         IDataResult<List<TeacherDto>> GetTeacherWithPositions();

@@ -7,8 +7,8 @@ namespace Business.Abstract
 {
     public interface ISlideService
     {
-        IResult Add(SlideCreateDto entity, IFormFile photoUrl, string webRootPath);
-        IResult Update(SlideUpdateDto entity, IFormFile photoUrl, string webRootPath);
+        IResult Add(SlideCreateDto entity, string webRootPath);
+        IResult Update(SlideUpdateDto entity, string webRootPath);
         IResult Delete(int id);
         IDataResult<List<Slide>> GetAll();
         IDataResult<Slide> GetById(int id);

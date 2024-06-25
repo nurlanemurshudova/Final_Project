@@ -20,18 +20,36 @@ namespace Business.Concrete
         {
             _slideDal = slideDal;
         }
-        public IResult Add(SlideCreateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Add(SlideCreateDto entity, string webRootPath)
         {
-            var model = SlideCreateDto.ToSlide(entity);
-            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            var validator = ValidationTool.Validate(new SlideValidation(), model, out List<ValidationErrorModel> errors);
+            string photo = null;
+
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
+            {
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
+            }
+
+            Slide slide = new Slide()
+            {
+                Title = entity.Title,
+                Description = entity.Description,
+                PhotoUrl = photo,
+            };
+
+            var validator = ValidationTool.Validate(new SlideValidation(), slide, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                var error = errors.Select(e => new ValidationErrorModel
+                {
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
 
-            _slideDal.Add(model);
+            _slideDal.Add(slide);
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
 
@@ -57,26 +75,37 @@ namespace Business.Concrete
 
         }
 
-        public IResult Update(SlideUpdateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Update(SlideUpdateDto entity, string webRootPath)
         {
-            var model = SlideUpdateDto.ToSlide(entity);
             var existData = GetById(entity.Id).Data;
-            if (photoUrl == null)
+            string photo = existData?.PhotoUrl;
+
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
             {
-                model.PhotoUrl = existData.PhotoUrl;
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
             }
-            else
+
+            Slide slide = new Slide()
             {
-                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            }
-            var validator = ValidationTool.Validate(new SlideValidation(), model, out List<ValidationErrorModel> errors);
+                Title = entity.Title,
+                Description = entity.Description,
+                PhotoUrl = photo,
+            };
+
+            var validator = ValidationTool.Validate(new SlideValidation(), slide, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                var error = errors.Select(e => new ValidationErrorModel
+                {
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            model.LastUpdateDate = DateTime.Now;
-            _slideDal.Update(model);
+            slide.LastUpdateDate = DateTime.Now;
+            _slideDal.Update(slide);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }

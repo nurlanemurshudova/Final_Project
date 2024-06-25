@@ -7,8 +7,8 @@ namespace Business.Abstract
 {
     public interface ITestimonialService
     {
-        IResult Add(TestimonialCreateDto entity, IFormFile photoUrl, string webRootPath);
-        IResult Update(TestimonialUpdateDto entity, IFormFile photoUrl, string webRootPath);
+        IResult Add(TestimonialCreateDto entity, string webRootPath);
+        IResult Update(TestimonialUpdateDto entity, string webRootPath);
         IResult Delete(int id);
         IDataResult<List<Testimonial>> GetAll();
         IDataResult<Testimonial> GetById(int id);

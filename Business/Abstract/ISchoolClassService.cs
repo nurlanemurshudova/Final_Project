@@ -8,8 +8,8 @@ namespace Business.Abstract
 {
     public interface ISchoolClassService
     {
-        IResult Add(SchoolClassCreateDto entity, IFormFile photoUrl, string webRootPath);
-        IResult Update(SchoolClassUpdateDto entity, IFormFile photoUrl, string webRootPath);
+        IResult Add(SchoolClassCreateDto entity, string webRootPath);
+        IResult Update(SchoolClassUpdateDto entity, string webRootPath);
         IResult Delete(int id);
         IDataResult<List<SchoolClass>> GetAll();
         IDataResult<List<SchoolClassVM>> GetAllClassWithDetails();

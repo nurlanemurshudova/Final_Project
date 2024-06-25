@@ -21,17 +21,40 @@ namespace Business.Concrete
         {
             _teacherDal = teacherDal;
         }
-        public IResult Add(TeacherCreateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Add(TeacherCreateDto entity, string webRootPath)
         {
-            var model = TeacherCreateDto.ToTeacher(entity);
-            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            var validator = ValidationTool.Validate(new TeacherValidation(), model, out List<ValidationErrorModel> errors);
+            string photo = null;
+
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
+            {
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
+            }
+
+            Teacher teacher = new Teacher()
+            {
+                Name = entity.Name,
+                Surname = entity.Surname,
+                InstagramUrl = entity.InstagramUrl,
+                FacebookUrl = entity.FacebookUrl,
+                TwitterUrl = entity.TwitterUrl,
+                PositionId = entity.PositionId,
+                PhotoUrl = photo,
+                IsHomePage = entity.IsHomePage,
+                Experience = entity.Experience,
+            };
+            var validator = ValidationTool.Validate(new TeacherValidation(), teacher, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                var error = errors.Select(e => new ValidationErrorModel
+                {
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            _teacherDal.Add(model);
+            _teacherDal.Add(teacher);
 
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
@@ -56,26 +79,43 @@ namespace Business.Concrete
             return new SuccessDataResult<Teacher>(_teacherDal.GetById(id));
         }
 
-        public IResult Update(TeacherUpdateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Update(TeacherUpdateDto entity, string webRootPath)
         {
-            var model = TeacherUpdateDto.ToTeacher(entity);
             var existData = GetById(entity.Id).Data;
-            if (photoUrl == null)
+            string photo = existData?.PhotoUrl;
+
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
             {
-                model.PhotoUrl = existData.PhotoUrl;
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
             }
-            else
+
+            Teacher teacher = new Teacher()
             {
-                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            }
-            var validator = ValidationTool.Validate(new TeacherValidation(), model, out List<ValidationErrorModel> errors);
+                Id = entity.Id,
+                Name = entity.Name,
+                Surname = entity.Surname,
+                InstagramUrl = entity.InstagramUrl,
+                FacebookUrl = entity.FacebookUrl,
+                TwitterUrl = entity.TwitterUrl,
+                PositionId = entity.PositionId,
+                PhotoUrl = photo,
+                IsHomePage = entity.IsHomePage,
+                Experience = entity.Experience,
+            };
+            var validator = ValidationTool.Validate(new TeacherValidation(), teacher, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                var error = errors.Select(e => new ValidationErrorModel
+                {
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            model.LastUpdateDate = DateTime.Now;
-            _teacherDal.Update(model);
+            teacher.LastUpdateDate = DateTime.Now;
+            _teacherDal.Update(teacher);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }

@@ -1,4 +1,5 @@
 ﻿using Entities.Concrete.TableModels;
+using Microsoft.AspNetCore.Http;
 
 namespace Entities.Concrete.Dtos
 {
@@ -10,24 +11,8 @@ namespace Entities.Concrete.Dtos
         public string FacebookUrl { get; set; }
         public string TwitterUrl { get; set; }
         public int PositionId { get; set; }
-        public string PhotoUrl { get; set; }
+        public IFormFile PhotoUrl { get; set; }
         public bool IsHomePage { get; set; }
         public byte Experience { get; set; }
-        public static Teacher ToTeacher(TeacherCreateDto dto)
-        {
-            Teacher teacher = new Teacher()
-            {
-                Name = dto.Name,
-                Surname = dto.Surname,
-                InstagramUrl = dto.InstagramUrl,
-                FacebookUrl = dto.FacebookUrl,
-                TwitterUrl = dto.TwitterUrl,
-                PositionId = dto.PositionId,
-                PhotoUrl = dto.PhotoUrl,
-                IsHomePage = dto.IsHomePage,
-                Experience = dto.Experience,
-            };
-            return teacher;
-        }
     }
 }

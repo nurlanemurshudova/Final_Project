@@ -1,9 +1,11 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
@@ -32,21 +34,23 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(TeacherCandidateCreateDto teacherCandidate, IFormFile photoUrl)
+        public IActionResult Create(TeacherCandidateCreateDto teacherCandidate)
         {
-            if (photoUrl != null)
+            var result = _teacherCandidateService.Add(teacherCandidate, _env.WebRootPath);
+            if (!result.IsSuccess)
             {
-                ModelState.Clear();
-                ModelState.AddModelError("", "Şəkil boş ola bilməz");
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
                 return View(teacherCandidate);
             }
-            var result = _teacherCandidateService.Add(teacherCandidate, photoUrl, _env.WebRootPath, out Dictionary<string, string> propertyNames);
-            if (result.IsSuccess)
-            {
-                return RedirectToAction("Index");
-            }
-            AddModelError(propertyNames);
-            return View(teacherCandidate);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -58,16 +62,22 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(TeacherCandidateUpdateDto teacherCandidate, IFormFile photoUrl)
+        public IActionResult Edit(TeacherCandidateUpdateDto teacherCandidate)
         {
-            var result = _teacherCandidateService.Update(teacherCandidate, photoUrl, _env.WebRootPath, out Dictionary<string, string> propertyNames);
-
+            var result = _teacherCandidateService.Update(teacherCandidate, _env.WebRootPath);
             if (!result.IsSuccess)
             {
-                AddModelError(propertyNames);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                return View(teacherCandidate);
             }
-
             return RedirectToAction("Index");
         }
 

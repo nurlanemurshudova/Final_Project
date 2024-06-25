@@ -19,7 +19,7 @@
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                     <div class="h-100 d-flex flex-column justify-content-center p-5">
                         <h1 class="mb-4">Müəllim qeydiyyatı</h1>
-                        <form asp-action="Index" method="post" enctype="multipart/form-data">
+                        <form asp-action="Index" method="post" enctype="multipart/form-data" id="teacherCandidateForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="row g-3">
                                 <div class="col-sm-6">
@@ -34,7 +34,6 @@
                                         <input type="text" class="form-control border-0" asp-for="Surname" placeholder="Soyad">
                                         <label asp-for="Surname">Soyad</label>
                                         <span asp-validation-for="Surname" class="text-danger"></span>
-
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -42,7 +41,6 @@
                                         <input type="email" class="form-control border-0" asp-for="Email" placeholder="Email">
                                         <label asp-for="Email">Email</label>
                                         <span asp-validation-for="Email" class="text-danger"></span>
-
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -50,7 +48,6 @@
                                         <input type="text" class="form-control border-0" asp-for="PhoneNumber" placeholder="Əlaqə nömrəsi">
                                         <label asp-for="PhoneNumber">Əlaqə nömrəsi</label>
                                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -58,7 +55,6 @@
                                         <input type="date" class="form-control border-0" asp-for="BirthDate" placeholder="Təvəllüd">
                                         <label asp-for="BirthDate">Təvəllüd</label>
                                         <span asp-validation-for="BirthDate" class="text-danger"></span>
-
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -66,7 +62,6 @@
                                         <input type="file" class="form-control border-0" asp-for="PhotoUrl" placeholder="Şəkil">
                                         <label asp-for="PhotoUrl">Şəkil</label>
                                         <span asp-validation-for="PhotoUrl" class="text-danger"></span>
-
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -74,7 +69,6 @@
                                         <textarea class="form-control border-0" asp-for="Experience" style="height: 100px"></textarea>
                                         <label asp-for="Experience">Təcrübə</label>
                                         <span asp-validation-for="Experience" class="text-danger"></span>
-
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -82,16 +76,13 @@
                                         <textarea class="form-control border-0" asp-for="Education" style="height: 100px"></textarea>
                                         <label asp-for="Education">Təhsil</label>
                                         <span asp-validation-for="Education" class="text-danger"></span>
-
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <button value="@DefaultConstantValue.ADD_MESSAGE" class="btn btn-primary w-100 py-3" type="submit">Göndər</button>
                                 </div>
-
                             </div>
                         </form>
-
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s" style="min-height: 400px;">
@@ -103,6 +94,88 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#teacherCandidateForm').validate({
+            rules: {
+                Name: {
+                    required: true,
+                    minlength: 2
+                },
+                Surname: {
+                    required: true,
+                    minlength: 2
+                },
+                Email: {
+                    required: true,
+                    email: true
+                },
+                PhoneNumber: {
+                    required: true,
+                    digits: true
+                },
+                BirthDate: {
+                    required: true,
+                    date: true
+                },
+                PhotoUrl: {
+                    required: true,
+                    accept: "image/*"
+                },
+                Experience: {
+                    required: true
+                },
+                Education: {
+                    required: true
+                }
+            },
+            messages: {
+                Name: {
+                    required: "Ad daxil edin",
+                    minlength: "Ad ən az 2 simvol olmalıdır"
+                },
+                Surname: {
+                    required: "Soyad daxil edin",
+                    minlength: "Soyad ən az 2 simvol olmalıdır"
+                },
+                Email: {
+                    required: "Email daxil edin",
+                    email: "Doğru bir email daxil edin"
+                },
+                PhoneNumber: {
+                    required: "Əlaqə nömrəsi daxil edin",
+                    digits: "Sadəcə nömrə daxil edin"
+                },
+                BirthDate: {
+                    required: "Təvəllüd daxil edin",
+                    date: "Doğru bir tarix daxil edin"
+                },
+                PhotoUrl: {
+                    required: "Şəkil faylı daxil edin",
+                    accept: "Sadəcə şəkil formatında fayl yükləyin"
+                },
+                Experience: {
+                    required: "Təcrübənizi daxil edin",
+                },
+                Education: {
+                    required: "Təhsilinizi qeyd edin",
+                }
+            },
+            errorElement: "span",
+            errorPlacement: function (error, element) {
+                error.addClass("text-danger");
+                error.insertAfter(element);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass("is-invalid").removeClass("is-valid");
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).addClass("is-valid").removeClass("is-invalid");
+            }
+        });
+    });
+</script>
 
 <script>
     window.onload = function () {

@@ -1,9 +1,11 @@
 ﻿using Business.Abstract;
 using Business.Concrete;
+using Core.Results.Concrete;
 using Entities.Concrete.Dtos;
 using Entities.Concrete.TableModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace KiderProjectWeb.Areas.Dashboard.Controllers
 {
@@ -32,19 +34,23 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(TestimonialCreateDto testimonial, IFormFile photoUrl)
+        public IActionResult Create(TestimonialCreateDto testimonial)
         {
-            if (photoUrl != null)
+            var result = _testimonialService.Add(testimonial, _env.WebRootPath);
+            if (!result.IsSuccess)
             {
-                var result = _testimonialService.Add(testimonial, photoUrl, _env.WebRootPath);
-                if (result.IsSuccess)
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
                 {
-                    return RedirectToAction("Index");
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
                 }
-                ModelState.AddModelError("", result.Message);
+                return View(testimonial);
             }
-
-            return View(testimonial);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -56,17 +62,22 @@ namespace KiderProjectWeb.Areas.Dashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(TestimonialUpdateDto testimonial, IFormFile photoUrl)
+        public IActionResult Edit(TestimonialUpdateDto testimonial)
         {
-            var result = _testimonialService.Update(testimonial, photoUrl, _env.WebRootPath);
-
+            var result = _testimonialService.Update(testimonial,  _env.WebRootPath);
             if (!result.IsSuccess)
             {
-                ModelState.Clear();
-                ModelState.AddModelError("", result.Message);
-                return View();
+                var errorResult = result as ErrorResult;
+                if (errorResult != null)
+                {
+                    ModelState.Clear();
+                    foreach (var error in errorResult.Errors)
+                    {
+                        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    }
+                }
+                return View(testimonial);
             }
-
             return RedirectToAction("Index");
         }
 

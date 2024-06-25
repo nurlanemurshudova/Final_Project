@@ -1,7 +1,11 @@
 ﻿using Business.Abstract;
+using DataAccess.Concrete;
 using Entities.Concrete.Dtos;
+using Entities.Concrete.TableModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace KiderProjectWebApi.Controllers
@@ -11,11 +15,9 @@ namespace KiderProjectWebApi.Controllers
     public class SchoolClassController : ControllerBase
     {
         private readonly ISchoolClassService _schoolClassService;
-        private readonly IWebHostEnvironment _env;
-        public SchoolClassController(ISchoolClassService schoolClassService, IWebHostEnvironment env)
+        public SchoolClassController(ISchoolClassService schoolClassService)
         {
             _schoolClassService = schoolClassService;
-            _env = env;
         }
         [HttpGet("GetClasses")]
         public IActionResult GetClasses()
@@ -29,9 +31,11 @@ namespace KiderProjectWebApi.Controllers
         }
 
         [HttpPost("AddClass")]
-        public IActionResult AddClass(SchoolClassCreateDto dto, IFormFile photoUrl)
+        public IActionResult AddClass([FromForm] SchoolClassCreateDto dto)
         {
-            var result = _schoolClassService.Add(dto, photoUrl, _env.WebRootPath);
+
+            string wwwrootFolder = Path.Combine("..", "KiderProjectWeb", "wwwroot");
+            var result = _schoolClassService.Add(dto, wwwrootFolder);
 
             if (result.IsSuccess)
                 return Ok(result);
@@ -40,9 +44,10 @@ namespace KiderProjectWebApi.Controllers
         }
 
         [HttpPut("UpdateClass")]
-        public IActionResult UpdateClass(SchoolClassUpdateDto dto,IFormFile photoUrl)
+        public IActionResult UpdateClass([FromForm]SchoolClassUpdateDto dto)
         {
-            var result = _schoolClassService.Update(dto, photoUrl, _env.WebRootPath);
+            string wwwrootFolder = Path.Combine("..", "KiderProjectWeb", "wwwroot");
+            var result = _schoolClassService.Update(dto, wwwrootFolder);
 
             if (result.IsSuccess)
                 return Ok(result);

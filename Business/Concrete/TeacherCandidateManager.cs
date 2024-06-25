@@ -15,27 +15,43 @@ namespace Business.Concrete
     public class TeacherCandidateManager : ITeacherCandidateService
     {
         private readonly ITeacherCandidateDal _teacherCandidateDal;
-        public TeacherCandidateManager(ITeacherCandidateDal teacherCandidateDal) 
+        public TeacherCandidateManager(ITeacherCandidateDal teacherCandidateDal)
         {
             _teacherCandidateDal = teacherCandidateDal;
         }
-        public IResult Add(TeacherCandidateCreateDto entity, IFormFile photoUrl, string webRootPath, out Dictionary<string, string> propertyNames)
+        public IResult Add(TeacherCandidateCreateDto entity, string webRootPath)
         {
-            var model = TeacherCandidateCreateDto.ToTeacherCandidate(entity);
-            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            var validator = ValidationTool.Validate(new TeacherCandidateValidation(), model, out List<ValidationErrorModel> errors);
+            string photo = null;
+
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
+            {
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
+            }
+            TeacherCandidate teacherCandidate = new TeacherCandidate()
+            {
+                Name = entity.Name,
+                Surname = entity.Surname,
+                Email = entity.Email,
+                PhoneNumber = entity.PhoneNumber,
+                BirthDate = entity.BirthDate,
+                Experience = entity.Experience,
+                Education = entity.Education,
+                PhotoUrl = photo,
+                IsContacted = entity.IsContacted,
+            };
+            var validator = ValidationTool.Validate(new TeacherCandidateValidation(), teacherCandidate, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
-                propertyNames = new();
-                foreach (var item in errors)
+                var error = errors.Select(e => new ValidationErrorModel
                 {
-                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
-                }
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            propertyNames = null;
-            _teacherCandidateDal.Add(model);
+            _teacherCandidateDal.Add(teacherCandidate);
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
 
@@ -59,32 +75,43 @@ namespace Business.Concrete
             return new SuccessDataResult<TeacherCandidate>(_teacherCandidateDal.GetById(id));
         }
 
-        public IResult Update(TeacherCandidateUpdateDto entity, IFormFile photoUrl, string webRootPath, out Dictionary<string, string> propertyNames)
+        public IResult Update(TeacherCandidateUpdateDto entity, string webRootPath)
         {
-            var model = TeacherCandidateUpdateDto.ToTeacherCandidate(entity);
             var existData = GetById(entity.Id).Data;
-            if (photoUrl == null)
-            {
-                model.PhotoUrl = existData.PhotoUrl;
-            }
-            else
-            {
-                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            }
-            var validator = ValidationTool.Validate(new TeacherCandidateValidation(), model, out List<ValidationErrorModel> errors);
+            string photo = existData?.PhotoUrl;
 
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
+            {
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
+            }
+
+
+            TeacherCandidate teacherCandidate = new TeacherCandidate()
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Surname = entity.Surname,
+                Email = entity.Email,
+                PhoneNumber = entity.PhoneNumber,
+                BirthDate = entity.BirthDate,
+                Experience = entity.Experience,
+                Education = entity.Education,
+                PhotoUrl = photo,
+                IsContacted = entity.IsContacted,
+            };
+            var validator = ValidationTool.Validate(new TeacherCandidateValidation(), teacherCandidate, out List<ValidationErrorModel> errors);
             if (!validator)
             {
-                propertyNames = new();
-                foreach (var item in errors)
+                var error = errors.Select(e => new ValidationErrorModel
                 {
-                    propertyNames.Add(item.PropertyName, item.ErrorMessage);
-                }
-                return new ErrorResult(errors.ValidationErrorMessagesWithNewLine());
+                    PropertyName = e.PropertyName,
+                    ErrorMessage = e.ErrorMessage
+                }).ToList();
+
+                return new ErrorResult(error);
             }
-            propertyNames = null;
-            model.LastUpdateDate = DateTime.Now;
-            _teacherCandidateDal.Update(model);
+            teacherCandidate.LastUpdateDate = DateTime.Now;
+            _teacherCandidateDal.Update(teacherCandidate);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }

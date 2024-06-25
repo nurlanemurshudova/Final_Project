@@ -21,19 +21,27 @@ namespace Business.Concrete
             _classDal = classDal;
         }
 
-        public IResult Add(SchoolClassCreateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Add(SchoolClassCreateDto entity, string webRootPath)
         {
-            //if (photoUrl == null)
-            //{
-            //    var photoError = new List<ValidationErrorModel>
-            //    {
-            //        new ValidationErrorModel { PropertyName = "PhotoUrl", ErrorMessage = "Şəkil əlavə edin." }
-            //    };
-            //    return new ErrorResult(photoError);
-            //}
-            var model = SchoolClassCreateDto.ToSchoolClass(entity);
-            model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
-            var validator = ValidationTool.Validate(new SchoolClassValidation(), model, out List<ValidationErrorModel> errors);
+            string photo = null;
+
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
+            {
+                photo = PictureHelper.UploadImage(entity.PhotoUrl,webRootPath);
+            }
+
+            SchoolClass schoolClass = new SchoolClass
+            {
+                Name = entity.Name,
+                PhotoUrl = photo,
+                ChildAge = entity.ChildAge,
+                IsHomePage = entity.IsHomePage,
+                Time = entity.Time,
+                Capacity = entity.Capacity,
+                Price = entity.Price,
+            };
+            //model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+            var validator = ValidationTool.Validate(new SchoolClassValidation(), schoolClass, out List<ValidationErrorModel> errors);
 
             if (!validator)
             {
@@ -45,25 +53,33 @@ namespace Business.Concrete
 
                 return new ErrorResult(error);
             }
-            _classDal.Add(model);
-            _classDal.AddWithTeacher(model, entity);
+            _classDal.Add(schoolClass);
+            _classDal.AddWithTeacher(schoolClass, entity);
             return new SuccessResult(UIMessages.ADDED_MESSAGE);
         }
-        public IResult Update(SchoolClassUpdateDto entity, IFormFile photoUrl, string webRootPath)
+        public IResult Update(SchoolClassUpdateDto entity, string webRootPath)
         {
-            var model = SchoolClassUpdateDto.ToSchoolClass(entity);
             var existData = GetByIdClassWithDetails(entity.Id).Data;
-            //var existData = GetById(entity.Id).Data;
-            if (photoUrl == null)
+            string photo = existData?.PhotoUrl;
+
+            if (entity.PhotoUrl != null && entity.PhotoUrl.Length > 0)
             {
-                model.PhotoUrl = existData.PhotoUrl;
-            }
-            else
-            {
-                model.PhotoUrl = PictureHelper.UploadImage(photoUrl, webRootPath);
+                photo = PictureHelper.UploadImage(entity.PhotoUrl, webRootPath);
             }
 
-            var validator = ValidationTool.Validate(new SchoolClassValidation(), model, out List<ValidationErrorModel> errors);
+            SchoolClass schoolClass = new SchoolClass
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                PhotoUrl = photo,
+                ChildAge = entity.ChildAge,
+                IsHomePage = entity.IsHomePage,
+                Time = entity.Time,
+                Capacity = entity.Capacity,
+                Price = entity.Price,
+            };
+
+            var validator = ValidationTool.Validate(new SchoolClassValidation(), schoolClass, out List<ValidationErrorModel> errors);
             if (!validator)
             {
                 var error = errors.Select(e => new ValidationErrorModel
@@ -75,9 +91,9 @@ namespace Business.Concrete
                 return new ErrorResult(error);
             }
 
-            model.LastUpdateDate = DateTime.Now;
-            _classDal.Update(model);
-            _classDal.UpdateWithTeacher(model, entity);
+            schoolClass.LastUpdateDate = DateTime.Now;
+            _classDal.Update(schoolClass);
+            _classDal.UpdateWithTeacher(schoolClass, entity);
 
             return new SuccessResult(UIMessages.UPDATE_MESSAGE);
         }

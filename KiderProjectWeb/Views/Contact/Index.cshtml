@@ -17,10 +17,9 @@
 <div class="container-xxl py-5">
     <div class="container">
         <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3">Get In Touch</h1>
+            <h1 class="mb-3">Əlaqə</h1>
             <p>
-                Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit
-                eirmod sit. Ipsum diam justo sed rebum vero dolor duo.
+                Sizi maraqlandıran hər hansı sual, təklif və ya qeydiyyat prosesi haqqında ətraflı məlumat almaq üçün bizimlə əlaqə saxlayın.
             </p>
         </div>
         <div class="row g-4 mb-5">
@@ -47,35 +46,34 @@
             <div class="row g-0">
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
                     <div class="h-100 d-flex flex-column justify-content-center p-5">
-                        <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
                         <form asp-action="Index" method="post" id="contactForm">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="row g-3">
                                 <div class="col-sm-6">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control border-0" asp-for="Name" placeholder="Your Name">
-                                        <label asp-for="Name">Your Name</label>
+                                        <input type="text" class="form-control border-0" asp-for="Name" placeholder="Ad">
+                                        <label asp-for="Name">Ad</label>
                                         <span asp-validation-for="Name" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-floating">
-                                        <input type="email" class="form-control border-0" asp-for="Email" placeholder="Your Email">
-                                        <label asp-for="Email">Your Email</label>
+                                        <input type="email" class="form-control border-0" asp-for="Email" placeholder="E-poçt ünvanı">
+                                        <label asp-for="Email">E-poçt ünvanı</label>
                                         <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control border-0" asp-for="Title" placeholder="Subject">
-                                        <label asp-for="Title">Subject</label>
+                                        <input type="text" class="form-control border-0" asp-for="Title" placeholder="Başlıq">
+                                        <label asp-for="Title">Başlıq</label>
                                         <span asp-validation-for="Title" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <textarea class="form-control border-0" placeholder="Leave a message here" asp-for="Message" style="height: 100px"></textarea>
-                                        <label asp-for="Message">Message</label>
+                                        <textarea class="form-control border-0" placeholder="Mesaj" asp-for="Message" style="height: 100px"></textarea>
+                                        <label asp-for="Message">Mesaj</label>
                                         <span asp-validation-for="Message" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -124,29 +122,29 @@
                 },
                 Message: {
                     required: true,
-                    minlength: 10
+                    minlength: 5
                 }
             },
             messages: {
                 Name: {
-                    required: "Ad yazılmalıdır",
+                    required: "Ad daxil edin",
                     minlength: "Ad ən az 2 simvol olmalıdır"
                 },
                 Email: {
-                    required: "E-poçt ünvanı yazılmalıdır",
+                    required: "E-poçt ünvanı daxil edin",
                     email: "Doğru e-poçt ünvanı daxil edin"
                 },
                 PhoneNumber: {
-                    required: "Telefon nömrəsi yazılmalıdır",
+                    required: "Telefon nömrəsi daxil edin",
                     digits: "Sadəcə nömrə daxil edin"
                 },
                 Title: {
-                    required: "Mövzu yazılmalıdır",
+                    required: "Mövzu başlığı daxil edin",
                     minlength: "Mövzu ən az 2 simvol olmalıdır"
                 },
                 Message: {
-                    required: "Mesaj yazılmalıdır",
-                    minlength: "Mesaj ən az 10 simvol olmalıdır"
+                    required: "Mesaj daxil edin",
+                    minlength: "Mesaj ən az 5 simvol olmalıdır"
                 }
             },
             errorElement: "span",
